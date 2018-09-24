@@ -1,5 +1,8 @@
 package edu.augustana.csc285.Frigatebird;
 	
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -22,6 +25,7 @@ public class Main extends Application {
 	}
 	
 	public static void main(String[] args) {
+		System.load(Core.NATIVE_LIBRARY_NAME);
 		launch(args);
 	}
 }
