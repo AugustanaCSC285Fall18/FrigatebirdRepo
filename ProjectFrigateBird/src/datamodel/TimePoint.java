@@ -39,7 +39,7 @@ public class TimePoint implements Comparable<TimePoint> {
 	public int getFrameNum() {
 		return frameNum;
 	}
-
+//
 	@Override
 	public String toString() {
 		return String.format("(%.1f,%.1f@T=%d)",x,y,frameNum);

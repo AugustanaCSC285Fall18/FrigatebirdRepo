@@ -8,7 +8,7 @@ import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.Videoio;
 
 public class Video {
-	
+	//
 	private String filePath;
 	private VideoCapture vidCap;
 	private int emptyFrameNum;

@@ -12,7 +12,7 @@ public class AnimalTrack {
 		this.animalID = id;
 		positions = new ArrayList<TimePoint>();
 	}
-	
+	//
 	public void add(TimePoint pt) {
 		positions.add(pt);
 	}

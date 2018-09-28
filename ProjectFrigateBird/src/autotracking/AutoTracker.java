@@ -100,7 +100,7 @@ public class AutoTracker {
 				listener.handleTrackedFrame(visualizationFrame, fNum, percentDone);
 			}					
 		}
-		
+		//
 		archivedTrackedSegments.addAll(currentlyTrackingSegments);
 		
 		for (AutoTrackListener listener : listeners) {
