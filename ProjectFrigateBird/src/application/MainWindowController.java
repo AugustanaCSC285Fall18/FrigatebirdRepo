@@ -50,9 +50,9 @@ private Stage stage;
 
 	
 	@FXML public void initialize() {		
-		loadVideo("S:/class/cs/285/sample_videos/sample1.mp4");		
-		project.getVideo().setXPixelsPerCm(6.5); //  these are just rough estimates!
-		project.getVideo().setYPixelsPerCm(6.7);
+		//loadVideo("S:/class/cs/285/sample_videos/sample1.mp4");		
+		//project.getVideo().setXPixelsPerCm(6.5); //  these are just rough estimates!
+		//project.getVideo().setYPixelsPerCm(6.7);
 		
 		vidSlider.valueProperty().addListener((obs, oldV, newV) -> showFrameAt(newV.intValue())); 
 
@@ -66,12 +66,7 @@ private Stage stage;
 		Window mainWindow = videoView.getScene().getWindow();
 		File chosenFile = fileChooser.showOpenDialog(mainWindow);
 		if (chosenFile != null) {
-			try {
-				videoView.setImage(new Image(new FileInputStream(chosenFile)));
-				
-			} catch (FileNotFoundException e) {			
-				e.printStackTrace();
-			}
+			loadVideo(chosenFile.getPath());
 		}
 		
 	}
@@ -89,13 +84,13 @@ private Stage stage;
 	}
 
 	public void showFrameAt(int frameNum) {
-//		if (autotracker == null || !autotracker.isRunning()) {
-//			project.getVideo().setCurrentFrameNum(frameNum);
-//			Image curFrame = UtilsForOpenCV.matToJavaFXImage(project.getVideo().readFrame());
-//			videoView.setImage(curFrame);
-//
-//			
-//		}		
+		if (autotracker == null || !autotracker.isRunning()) {
+			project.getVideo().setCurrentFrameNum(frameNum);
+			Image curFrame = UtilsForOpenCV.matToJavaFXImage(project.getVideo().readFrame());
+			videoView.setImage(curFrame);
+
+			
+		}		
 	}
 	
 	
