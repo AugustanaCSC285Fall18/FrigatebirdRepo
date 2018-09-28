@@ -11,6 +11,7 @@ public class Video {
 	
 	private String filePath;
 	private VideoCapture vidCap;
+	private int emptyFrameNum;
 	private int startFrameNum;
 	private int endFrameNum;
 	
@@ -47,6 +48,9 @@ public class Video {
 		return (int) vidCap.get(Videoio.CAP_PROP_FRAME_COUNT);
 	}
 
+	public int getEmptyFrameNum() {
+		return emptyFrameNum;
+	}
 	
 	public int getStartFrameNum() {
 		return startFrameNum;
@@ -78,6 +82,10 @@ public class Video {
 
 	public void setYPixelsPerCm(double yPixelsPerCm) {
 		this.yPixelsPerCm = yPixelsPerCm;
+	}
+	
+	public double getAvgPixelsPerCm() {
+		return (xPixelsPerCm + yPixelsPerCm)/2;
 	}
 
 	public Rectangle getArenaBounds() {

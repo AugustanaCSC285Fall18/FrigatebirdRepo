@@ -9,8 +9,17 @@ public class AnimalTrack {
 	
 	private List<TimePoint> positions;
 	
+	public AnimalTrack(String id) {
+		this.animalID = id;
+		positions = new ArrayList<TimePoint>();
+	}
+	
 	public AnimalTrack() {
 		positions = new ArrayList<TimePoint>();
+	}
+	
+	public void add(TimePoint pt) {
+		positions.add(pt);
 	}
 	
 	public boolean hasIDAssigned() {
@@ -19,6 +28,10 @@ public class AnimalTrack {
 	
 	public List<TimePoint> getPositions() {
 		return positions;
+	}
+	
+	public TimePoint getFinalTimePoint() {
+		return positions.get(positions.size()-1);
 	}
 	
 	public String toString() {
