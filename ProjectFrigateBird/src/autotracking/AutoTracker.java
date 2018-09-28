@@ -108,6 +108,7 @@ public class AutoTracker {
 		}
 	}
 	
+	//changes
 	private AnimalTrack getMatchOrCreateAnimalTrackForPoint(TimePoint pt, List<AnimalTrack> currentSegments, double maxPixelMovementPerFrame) {
 		AnimalTrack bestMatch = null;
 		double slowestSpeed = Double.POSITIVE_INFINITY;

@@ -3,11 +3,14 @@ package datamodel;
 import java.awt.Point;
 
 public class TimePoint {
+	private double x;     // location
+	private double y;
 	private Point pt;     // location
 	private int frameNum; // time (measured in frames)
 	
-	public TimePoint(int x, int y, int frameNum) {
-		pt = new Point(x,y);
+	public TimePoint(double x, double y, int frameNum) {
+		this.x = x;
+		this.y = y;
 		this.frameNum = frameNum;
 	}
 	
@@ -31,4 +34,7 @@ public class TimePoint {
 		return pt.distance(other.pt);
 	}
 	
+	public int getTimeDiffAfter(TimePoint other) {
+		return this.frameNum - other.frameNum;
+	}
 }
