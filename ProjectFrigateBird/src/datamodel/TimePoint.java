@@ -1,9 +1,14 @@
 package datamodel;
 
+import java.awt.Point;
 
 public class TimePoint implements Comparable<TimePoint> {
-	private double x;     // location
-	private double y;      
+	private double x; // location
+	private double y;
+
+
+	private Point pt;     // location
+
 	private int frameNum; // time (measured in frames)
 	
 	public TimePoint(double x, double y, int frameNum) {
@@ -51,6 +56,7 @@ public class TimePoint implements Comparable<TimePoint> {
 		return Math.sqrt(dx*dx+dy*dy);
 	}
 
+
 	/**
 	 * How many frames have passed since another TimePoint
 	 * @param other - the otherTimePoint to compare with
@@ -68,3 +74,4 @@ public class TimePoint implements Comparable<TimePoint> {
 		return this.getTimeDiffAfter(other);
 	}
 }
+

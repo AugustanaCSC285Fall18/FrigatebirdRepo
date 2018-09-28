@@ -69,7 +69,7 @@ public class Video {
 	public void setEmptyFrameNum(int emptyFrameNum) {
 		this.emptyFrameNum = emptyFrameNum;
 	}
-		
+
 	public int getStartFrameNum() {
 		return startFrameNum;
 	}
@@ -81,7 +81,6 @@ public class Video {
 	public int getEndFrameNum() {
 		return endFrameNum;
 	}
-
 	public void setEndFrameNum(int endFrameNum) {
 		this.endFrameNum = endFrameNum;
 	}
@@ -101,7 +100,7 @@ public class Video {
 	public void setYPixelsPerCm(double yPixelsPerCm) {
 		this.yPixelsPerCm = yPixelsPerCm;
 	}
-
+	
 	public double getAvgPixelsPerCm() {
 		return (xPixelsPerCm + yPixelsPerCm)/2;
 	}
