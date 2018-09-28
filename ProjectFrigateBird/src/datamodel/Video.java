@@ -1,8 +1,9 @@
-package edu.augustana.csc285.Frigatebird;
+package datamodel;
 
 import java.awt.Rectangle;
 import java.io.FileNotFoundException;
 
+import org.opencv.core.Mat;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.Videoio;
 
@@ -24,6 +25,16 @@ public class Video {
 		if (!vidCap.isOpened()) {
 			throw new FileNotFoundException("Unable to open video file: " + filePath);
 		}		
+	}
+	
+	public void setCurrentFrameNum(int seekFrame) {
+		vidCap.set(Videoio.CV_CAP_PROP_POS_FRAMES, (double) seekFrame);
+	}
+	
+	public Mat readFrame() {
+		Mat frame = new Mat();
+		vidCap.read(frame);
+		return frame;
 	}
 	
 	public String getFilePath() {

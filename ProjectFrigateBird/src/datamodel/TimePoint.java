@@ -1,4 +1,4 @@
-package edu.augustana.csc285.Frigatebird;
+package datamodel;
 
 import java.awt.Point;
 

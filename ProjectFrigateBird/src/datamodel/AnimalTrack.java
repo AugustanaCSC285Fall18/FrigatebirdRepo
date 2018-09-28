@@ -1,4 +1,4 @@
-package edu.augustana.csc285.Frigatebird;
+package datamodel;
 
 import java.util.ArrayList;
 import java.util.List;

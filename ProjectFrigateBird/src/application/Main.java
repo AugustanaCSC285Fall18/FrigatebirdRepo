@@ -1,4 +1,4 @@
-package edu.augustana.csc285.Frigatebird;
+package application;
 	
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
