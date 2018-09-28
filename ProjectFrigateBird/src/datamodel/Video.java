@@ -63,7 +63,6 @@ public class Video {
 	public int getEndFrameNum() {
 		return endFrameNum;
 	}
-
 	public void setEndFrameNum(int endFrameNum) {
 		this.endFrameNum = endFrameNum;
 	}
