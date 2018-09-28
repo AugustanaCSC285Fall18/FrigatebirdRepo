@@ -60,6 +60,7 @@ private Stage stage;
 	
 	@FXML
 	public void handleBrowse()  {
+		System.out.println("BROWSERING");
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open Image File");
 		Window mainWindow = videoView.getScene().getWindow();
@@ -88,13 +89,13 @@ private Stage stage;
 	}
 
 	public void showFrameAt(int frameNum) {
-		if (autotracker == null || !autotracker.isRunning()) {
-			project.getVideo().setCurrentFrameNum(frameNum);
-			Image curFrame = UtilsForOpenCV.matToJavaFXImage(project.getVideo().readFrame());
-			videoView.setImage(curFrame);
-
-			
-		}		
+//		if (autotracker == null || !autotracker.isRunning()) {
+//			project.getVideo().setCurrentFrameNum(frameNum);
+//			Image curFrame = UtilsForOpenCV.matToJavaFXImage(project.getVideo().readFrame());
+//			videoView.setImage(curFrame);
+//
+//			
+//		}		
 	}
 	
 	
