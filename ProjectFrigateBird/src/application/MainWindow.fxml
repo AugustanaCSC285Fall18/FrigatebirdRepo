@@ -33,11 +33,12 @@
    <bottom>
       <FlowPane prefHeight="44.0" prefWidth="812.0" BorderPane.alignment="CENTER">
          <children>
-            <Label text="Label" />
+            <Label text="Start" />
             <TextField />
-            <Label text="Label" />
+            <Label text="End" />
             <TextField />
             <Button fx:id="trackingBtn" mnemonicParsing="false" text="Track Chicks" />
+            <Button fx:id="PlayBtn" mnemonicParsing="false" onAction="#playVideo" text="Play" />
          </children>
       </FlowPane>
    </bottom>

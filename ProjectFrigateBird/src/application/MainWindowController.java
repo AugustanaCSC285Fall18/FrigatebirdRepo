@@ -39,7 +39,9 @@ import utils.UtilsForOpenCV;
 //import utils.UtilsForOpenCV;
 public class MainWindowController implements AutoTrackListener{
 @FXML private ImageView videoView;
-@FXML private Button selectVideoBtn;
+@FXML private Button videoSelectBtn;
+@FXML private Button PlayBtn;
+@FXML private Button trackingBtn;
 @FXML private Slider vidSlider;
 //@FXML private Button autoTrackBtn;
 
@@ -104,5 +106,9 @@ private Stage stage;
 	public void trackingComplete(List<AnimalTrack> trackedSegments) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void playVideo() {
+		// TODO make the button work or maybe remove?
 	}
 }
