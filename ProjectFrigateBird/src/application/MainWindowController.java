@@ -4,8 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.opencv.core.Mat;
+import org.opencv.videoio.Videoio;
 
 import autotracking.AutoTrackListener;
 import autotracking.AutoTracker;
@@ -42,8 +46,15 @@ public class MainWindowController implements AutoTrackListener{
 @FXML private Button videoSelectBtn;
 @FXML private Button PlayBtn;
 @FXML private Button trackingBtn;
+@FXML private Button emptyFrameBtn;
 @FXML private Slider vidSlider;
-//@FXML private Button autoTrackBtn;
+@FXML private TextField startFrameLabel;
+@FXML private TextField endFrameLabel;
+@FXML private TextField currentFrameText;
+@FXML private TextField timeText;
+
+
+private ScheduledExecutorService timer;
 
 private ProjectData project;
 private AutoTracker autotracker;
@@ -56,13 +67,14 @@ private Stage stage;
 		//project.getVideo().setXPixelsPerCm(6.5); //  these are just rough estimates!
 		//project.getVideo().setYPixelsPerCm(6.7);
 		
-		vidSlider.valueProperty().addListener((obs, oldV, newV) -> showFrameAt(newV.intValue())); 
+		vidSlider.valueProperty().addListener((obs, oldV, newV) -> showFrameAt(newV.intValue()) );
+		vidSlider.valueProperty().addListener((obs, oldV, newV) -> showTimeAt(newV.intValue()) ); 
 
 	}
 	
 	@FXML
 	public void handleBrowse()  {
-		System.out.println("BROWSERING");
+		//System.out.println("BROWSERING");
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open Image File");
 		Window mainWindow = videoView.getScene().getWindow();
@@ -79,10 +91,10 @@ private Stage stage;
 			Video video = project.getVideo();
 			vidSlider.setMax(video.getTotalNumFrames()-1);
 			showFrameAt(0);
+			showTimeAt(0);
 		} catch (FileNotFoundException e) {			
 			e.printStackTrace();
 		}
-
 	}
 
 	public void showFrameAt(int frameNum) {
@@ -90,25 +102,128 @@ private Stage stage;
 			project.getVideo().setCurrentFrameNum(frameNum);
 			Image curFrame = UtilsForOpenCV.matToJavaFXImage(project.getVideo().readFrame());
 			videoView.setImage(curFrame);
+			currentFrameText.setText(String.format("%05d", frameNum));
 
 			
 		}		
 	}
 	
+	public void showTimeAt(int frameNum) {
+		if (autotracker == null || !autotracker.isRunning()) {
+			project.getVideo().setCurrentFrameNum(frameNum);
+			Image curFrame = UtilsForOpenCV.matToJavaFXImage(project.getVideo().readFrame());
+			videoView.setImage(curFrame);
+			double timeInSeconds = project.getVideo().convertFrameNumsToSeconds(frameNum);
+			int minutes = (int) (timeInSeconds/60);
+			int seconds = (int) (timeInSeconds%60);
+			if(seconds<10) {
+				timeText.setText(minutes + ":0" + seconds);
+			} else {
+				timeText.setText(minutes + ":" + seconds);
+			}
+		}
+	}
 	
+	
+	@FXML
+	public void handleStartAutotracking() throws InterruptedException {
+		if (autotracker == null || !autotracker.isRunning()) {
+			Video video = project.getVideo();
+			video.setStartFrameNum(Integer.parseInt(startFrameLabel.getText()));
+			video.setEndFrameNum(Integer.parseInt(endFrameLabel.getText()));
+			autotracker = new AutoTracker();
+			// Use Observer Pattern to give autotracker a reference to this object, 
+			// and call back to methods in this class to update progress.
+			autotracker.addAutoTrackListener(this);
+			
+			// this method will start a new thread to run AutoTracker in the background
+			// so that we don't freeze up the main JavaFX UI thread.
+			autotracker.startAnalysis(video);
+			trackingBtn.setText("CANCEL auto-tracking");
+		} else {
+			autotracker.cancelAnalysis();
+			trackingBtn.setText("Start auto-tracking");
+		}
+		 
+	}
+
+	// this method will get called repeatedly by the Autotracker after it analyzes each frame
 	@Override
-	public void handleTrackedFrame(Mat frame, int frameNumber, double percentTrackingComplete) {
-		// TODO Auto-generated method stub
-		
+	public void handleTrackedFrame(Mat frame, int frameNumber, double fractionComplete) {
+		Image imgFrame = UtilsForOpenCV.matToJavaFXImage(frame);
+		// this method is being run by the AutoTracker's thread, so we must
+		// ask the JavaFX UI thread to update some visual properties
+		Platform.runLater(() -> { 
+			videoView.setImage(imgFrame);
+			vidSlider.setValue(frameNumber);
+		});		
 	}
 
 	@Override
 	public void trackingComplete(List<AnimalTrack> trackedSegments) {
-		// TODO Auto-generated method stub
+		project.getUnassignedSegments().clear();
+		project.getUnassignedSegments().addAll(trackedSegments);
+
+		for (AnimalTrack track: trackedSegments) {
+			System.out.println(track);
+//			System.out.println("  " + track.getPositions());
+		}
+		Platform.runLater(() -> { 
+			trackingBtn.setText("Autotrack");
+		});	
 		
 	}
 	
 	public void playVideo() {
 		// TODO make the button work or maybe remove?
+		Video video = project.getVideo();
+		video.setCurrentFrameNum(video.getCurrentFrameNum()+1);
+		
+		
+		Runnable frameGrabber = new Runnable() {
+			@Override
+			public void run() {
+				Mat frame = project.getVideo().readFrame();
+				showFrameAt(project.getVideo().getCurrentFrameNum());
+				showTimeAt(project.getVideo().getCurrentFrameNum());
+				
+			}
+		};
+		
+		this.timer = Executors.newSingleThreadScheduledExecutor();
+		this.timer.scheduleAtFixedRate(frameGrabber, 0, 33, TimeUnit.MILLISECONDS);
+		
+		PlayBtn.setText("Stop");
+		
+		
+		vidSlider.valueProperty().addListener(new ChangeListener<Number>(){
+
+			public void changed(ObservableValue<? extends Number> Observable, Number oldValue, Number newValue) {
+				
+				timer.shutdown();
+				try {
+					timer.awaitTermination(1000, TimeUnit.MILLISECONDS);
+					video.setCurrentFrameNum((int) newValue);
+					//videoView.set(Videoio.CAP_PROP_POS_FRAMES, video.getCurrentFrameNum());
+					Mat frame = video.readFrame();
+					// convert and show the frame
+					showFrameAt(project.getVideo().getCurrentFrameNum());
+					showTimeAt(project.getVideo().getCurrentFrameNum());
+
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+			}
+			
+		});
+		
+	}
+	
+	public void setEmptyFrame() {
+		Video video = project.getVideo();
+		video.setEmptyFrameNum(video.getCurrentFrameNum());
+		System.out.println(video.getEmptyFrameNum());
+		
 	}
 }

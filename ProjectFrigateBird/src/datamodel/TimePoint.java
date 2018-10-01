@@ -5,10 +5,6 @@ import java.awt.Point;
 public class TimePoint implements Comparable<TimePoint> {
 	private double x; // location
 	private double y;
-
-
-	private Point pt;     // location
-
 	private int frameNum; // time (measured in frames)
 	
 	public TimePoint(double x, double y, int frameNum) {
