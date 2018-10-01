@@ -46,7 +46,7 @@
    <bottom>
       <FlowPane prefHeight="44.0" prefWidth="812.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="PlayBtn" mnemonicParsing="false" onAction="#playVideo" text="Play" />
+            <Button fx:id="playBtn" mnemonicParsing="false" onAction="#playVideo" text="Play" />
             <Label text="Start" />
             <TextField fx:id="startFrameLabel" />
             <Label text="End" />

@@ -21,6 +21,8 @@ public class AutoTracker {
 	private ExecutorService execService;
 	private int segmentCounter = 0;
 	
+	private Mat emptyFrame;
+	
 	 // Note: I think the chicks might be about 50 sq. cm in area, from a top view?
 	private final double targetShapeArea = 50;
 	
@@ -38,6 +40,7 @@ public class AutoTracker {
 	 * Starts the auto-tracking process
 	 * @param vid - the video to analyze     
  	 */
+		
 	public void startAnalysis(Video vid) {
 		task = new Task<Void>() {
 
@@ -56,6 +59,7 @@ public class AutoTracker {
 		List<AnimalTrack> currentlyTrackingSegments = new ArrayList<>();
 
 		vid.setCurrentFrameNum(vid.getEmptyFrameNum());
+		System.out.println(vid.getCurrentFrameNum());
 		Mat emptyFrame = vid.readFrame();
 
 

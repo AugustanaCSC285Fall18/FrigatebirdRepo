@@ -44,7 +44,7 @@ import utils.UtilsForOpenCV;
 public class MainWindowController implements AutoTrackListener{
 @FXML private ImageView videoView;
 @FXML private Button videoSelectBtn;
-@FXML private Button PlayBtn;
+@FXML private Button playBtn;
 @FXML private Button trackingBtn;
 @FXML private Button emptyFrameBtn;
 @FXML private Slider vidSlider;
@@ -67,8 +67,7 @@ private Stage stage;
 		//project.getVideo().setXPixelsPerCm(6.5); //  these are just rough estimates!
 		//project.getVideo().setYPixelsPerCm(6.7);
 		
-		vidSlider.valueProperty().addListener((obs, oldV, newV) -> showFrameAt(newV.intValue()) );
-		vidSlider.valueProperty().addListener((obs, oldV, newV) -> showTimeAt(newV.intValue()) ); 
+		vidSlider.valueProperty().addListener((obs, oldV, newV) -> showFrameAt(newV.intValue()) ); 
 
 	}
 	
@@ -89,46 +88,52 @@ private Stage stage;
 		try {
 			project = new ProjectData(filePath);
 			Video video = project.getVideo();
+			
+			video.setXPixelsPerCm(6);
+			video.setYPixelsPerCm(6);
+			
 			vidSlider.setMax(video.getTotalNumFrames()-1);
 			showFrameAt(0);
-			showTimeAt(0);
 		} catch (FileNotFoundException e) {			
 			e.printStackTrace();
 		}
 	}
 
-	public void showFrameAt(int frameNum) {
-		if (autotracker == null || !autotracker.isRunning()) {
-			project.getVideo().setCurrentFrameNum(frameNum);
-			Image curFrame = UtilsForOpenCV.matToJavaFXImage(project.getVideo().readFrame());
-			videoView.setImage(curFrame);
-			currentFrameText.setText(String.format("%05d", frameNum));
-
-			
-		}		
-	}
 	
-	public void showTimeAt(int frameNum) {
+	public void showFrameAt(int frameNum) {
+//		if (timer != null && !timer.isShutdown()) {
+//			timer.shutdown();
+//			try {
+//				timer.awaitTermination(1000, TimeUnit.MILLISECONDS);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//		}
+		
 		if (autotracker == null || !autotracker.isRunning()) {
 			project.getVideo().setCurrentFrameNum(frameNum);
 			Image curFrame = UtilsForOpenCV.matToJavaFXImage(project.getVideo().readFrame());
-			videoView.setImage(curFrame);
 			double timeInSeconds = project.getVideo().convertFrameNumsToSeconds(frameNum);
 			int minutes = (int) (timeInSeconds/60);
 			int seconds = (int) (timeInSeconds%60);
-			if(seconds<10) {
-				timeText.setText(minutes + ":0" + seconds);
-			} else {
-				timeText.setText(minutes + ":" + seconds);
-			}
-		}
+
+			Platform.runLater(() -> {
+				videoView.setImage(curFrame);
+				currentFrameText.setText(String.format("%05d", frameNum));
+				if(seconds<10) {
+					timeText.setText(minutes + ":0" + seconds);
+				} else {
+					timeText.setText(minutes + ":" + seconds);
+				}
+			});			
+		}		
 	}
 	
 	
 	@FXML
 	public void handleStartAutotracking() throws InterruptedException {
 		if (autotracker == null || !autotracker.isRunning()) {
-			Video video = project.getVideo();
+			Video video = project.getVideo();			
 			video.setStartFrameNum(Integer.parseInt(startFrameLabel.getText()));
 			video.setEndFrameNum(Integer.parseInt(endFrameLabel.getText()));
 			autotracker = new AutoTracker();
@@ -174,6 +179,7 @@ private Stage stage;
 		
 	}
 	
+	@FXML
 	public void playVideo() {
 		// TODO make the button work or maybe remove?
 		Video video = project.getVideo();
@@ -183,40 +189,17 @@ private Stage stage;
 		Runnable frameGrabber = new Runnable() {
 			@Override
 			public void run() {
-				Mat frame = project.getVideo().readFrame();
-				showFrameAt(project.getVideo().getCurrentFrameNum());
-				showTimeAt(project.getVideo().getCurrentFrameNum());
+				//Platform.runLater(() -> vidSlider.setValue(vidSlider.getValue() + 1));
 				
+				showFrameAt(project.getVideo().getCurrentFrameNum());
 			}
 		};
 		
 		this.timer = Executors.newSingleThreadScheduledExecutor();
 		this.timer.scheduleAtFixedRate(frameGrabber, 0, 33, TimeUnit.MILLISECONDS);
 		
-		PlayBtn.setText("Stop");
+		playBtn.setText("Stop");
 		
-		
-		vidSlider.valueProperty().addListener(new ChangeListener<Number>(){
-
-			public void changed(ObservableValue<? extends Number> Observable, Number oldValue, Number newValue) {
-				
-				timer.shutdown();
-				try {
-					timer.awaitTermination(1000, TimeUnit.MILLISECONDS);
-					video.setCurrentFrameNum((int) newValue);
-					//videoView.set(Videoio.CAP_PROP_POS_FRAMES, video.getCurrentFrameNum());
-					Mat frame = video.readFrame();
-					// convert and show the frame
-					showFrameAt(project.getVideo().getCurrentFrameNum());
-					showTimeAt(project.getVideo().getCurrentFrameNum());
-
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				
-			}
-			
-		});
 		
 	}
 	
