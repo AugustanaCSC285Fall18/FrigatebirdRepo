@@ -44,6 +44,7 @@ import utils.UtilsForOpenCV;
 public class MainWindowController implements AutoTrackListener{
 @FXML private ImageView videoView;
 @FXML private Button videoSelectBtn;
+@FXML private Button addChickBtn;
 @FXML private Button playBtn;
 @FXML private Button trackingBtn;
 @FXML private Button emptyFrameBtn;
@@ -200,6 +201,12 @@ private Stage stage;
 		
 		playBtn.setText("Stop");
 		
+		
+	}
+	
+	@FXML
+	public void handleAddChickBtn() {
+		System.out.println("Adding Chick");
 		
 	}
 	
