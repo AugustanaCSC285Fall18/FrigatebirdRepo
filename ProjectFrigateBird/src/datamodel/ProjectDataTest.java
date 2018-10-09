@@ -30,8 +30,9 @@ class ProjectDataTest {
 	}
 	
 	@Test
-	void test() {
-		
+	void test() throws FileNotFoundException {
+		ProjectData fake = makeFakeData();
+		assertEquals("testVideos/CircleTest1_no_overlap.mp4", fake.getVideo());
 	}
 
 }
