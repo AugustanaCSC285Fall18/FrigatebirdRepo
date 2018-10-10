@@ -33,8 +33,9 @@ public class ManualTrackWindowController {
 	private ProjectData project;
 
 	public void setProject(ProjectData project) {
+		
 		this.project = project;
-		Video video = project.getVideo();
+		Video video = this.project.getVideo();
 		video.setCurrentFrameNum(video.getCurrentFrameNum());
 		
 		Image curFrame = UtilsForOpenCV.matToJavaFXImage(video.readFrame());
