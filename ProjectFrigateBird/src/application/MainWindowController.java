@@ -1,5 +1,6 @@
 package application;
 
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -61,6 +62,8 @@ public class MainWindowController implements AutoTrackListener {
 	private Button trackingBtn;
 	@FXML
 	private Button emptyFrameBtn;
+	@FXML
+	private Button manualtrackBtn;
 	@FXML
 	private Slider vidSlider;
 	@FXML
@@ -222,13 +225,41 @@ public class MainWindowController implements AutoTrackListener {
 		try {
 			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ChickCreationWindow.fxml"));
 			Parent root1 = (Parent) fxmlLoader.load();
+			ChickCreationWindowController controller = fxmlLoader.getController();
 			Stage stage = new Stage();
 			stage.initModality(Modality.APPLICATION_MODAL);
 			stage.initStyle(StageStyle.UNDECORATED);
 			stage.setTitle("Chick creation window");
 			stage.setScene(new Scene(root1));
 
+			stage.showAndWait();
+			// TODO: controller.getXXX() 
+			// TODO: create a new AnimalTrack() with the right name, and stick it in the projectdata 
+		} finally {
+
+		}
+	}
+	
+	@FXML 
+	public void handleManualTrackBtn() throws IOException {
+		
+		try {
+			//stage.hide();
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ManualTrackWindow.fxml"));
+			Parent root1 = (Parent) fxmlLoader.load();
+			ManualTrackWindowController controller = fxmlLoader.getController();
+			Stage stage = new Stage();
+			
+			stage.setTitle("Manual Tracking Window");
+			stage.setScene(new Scene(root1));
+
+			controller.setProject(project);
+			
+			// TODO: controller.getXXX() 
+			// TODO: create a new AnimalTrack() with the right name, and stick it in the projectdata
+			
 			stage.show();
+
 		} finally {
 
 		}
@@ -240,4 +271,5 @@ public class MainWindowController implements AutoTrackListener {
 		System.out.println(video.getEmptyFrameNum());
 
 	}
+	
 }

@@ -59,7 +59,6 @@ public class AutoTracker {
 		List<AnimalTrack> currentlyTrackingSegments = new ArrayList<>();
 
 		vid.setCurrentFrameNum(vid.getEmptyFrameNum());
-		System.out.println(vid.getCurrentFrameNum());
 		Mat emptyFrame = vid.readFrame();
 
 
