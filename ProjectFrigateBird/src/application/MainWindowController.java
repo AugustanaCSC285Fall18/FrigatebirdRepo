@@ -227,8 +227,7 @@ public class MainWindowController implements AutoTrackListener {
 			Parent root1 = (Parent) fxmlLoader.load();
 			ChickCreationWindowController controller = fxmlLoader.getController();
 			Stage stage = new Stage();
-			stage.initModality(Modality.APPLICATION_MODAL);
-			stage.initStyle(StageStyle.UNDECORATED);
+
 			stage.setTitle("Chick creation window");
 			stage.setScene(new Scene(root1));
 
