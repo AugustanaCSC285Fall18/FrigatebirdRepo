@@ -241,6 +241,7 @@ public class MainWindowController implements AutoTrackListener {
 		} finally {
 
 		}
+		
 	}
 	
 	@FXML 
