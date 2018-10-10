@@ -60,7 +60,11 @@ public class MainWindowController implements AutoTrackListener {
 	@FXML
 	private Button trackingBtn;
 	@FXML
-	private Button emptyFrameBtn;
+	private Button originBtn;
+	@FXML
+	private Button horizontalBtn;
+	@FXML
+	private Button verticalBtn;
 	@FXML
 	private Slider vidSlider;
 	@FXML
@@ -234,10 +238,11 @@ public class MainWindowController implements AutoTrackListener {
 		}
 	}
 
-	public void setEmptyFrame() {
-		Video video = project.getVideo();
-		video.setEmptyFrameNum(video.getCurrentFrameNum());
-		System.out.println(video.getEmptyFrameNum());
+//	public void setEmptyFrame() {
+//		Video video = project.getVideo();
+//		video.setEmptyFrameNum(video.getCurrentFrameNum());
+//		System.out.println(video.getEmptyFrameNum());
+//
+//	}
 
-	}
 }
