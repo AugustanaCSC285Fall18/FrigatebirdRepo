@@ -17,6 +17,7 @@ import autotracking.AutoTrackListener;
 import autotracking.AutoTracker;
 import datamodel.AnimalTrack;
 import datamodel.ProjectData;
+import datamodel.TimePoint;
 import datamodel.Video;
 //import autotracking.AutoTrackListener;
 //import autotracking.AutoTracker;
@@ -32,6 +33,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -41,6 +43,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -84,6 +87,7 @@ public class MainWindowController implements AutoTrackListener {
 	private ProjectData project;
 	private AutoTracker autotracker;
 	private Stage stage;
+	private boolean settingPoint = false;
 
 	@FXML
 	public void initialize() {
@@ -214,6 +218,7 @@ public class MainWindowController implements AutoTrackListener {
 				// Platform.runLater(() -> vidSlider.setValue(vidSlider.getValue() + 1));
 
 				showFrameAt(project.getVideo().getCurrentFrameNum());
+				vidSlider.setValue(project.getVideo().getCurrentFrameNum());
 			}
 		};
 
@@ -236,32 +241,34 @@ public class MainWindowController implements AutoTrackListener {
 			stage.setScene(new Scene(root1));
 
 			stage.showAndWait();
-			// TODO: controller.getXXX() 
-			// TODO: create a new AnimalTrack() with the right name, and stick it in the projectdata 
+			// TODO: controller.getXXX()
+			// TODO: create a new AnimalTrack() with the right name, and stick it in the
+			// projectdata
 		} finally {
 
 		}
-		
+
 	}
-	
-	@FXML 
+
+	@FXML
 	public void handleManualTrackBtn() throws IOException {
-		
+
 		try {
-			//stage.hide();
+			// stage.hide();
 			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ManualTrackWindow.fxml"));
 			Parent root1 = (Parent) fxmlLoader.load();
 			ManualTrackWindowController controller = fxmlLoader.getController();
 			Stage stage = new Stage();
-			
+
 			stage.setTitle("Manual Tracking Window");
 			stage.setScene(new Scene(root1));
 
 			controller.setProject(project);
-			
-			// TODO: controller.getXXX() 
-			// TODO: create a new AnimalTrack() with the right name, and stick it in the projectdata
-			
+
+			// TODO: controller.getXXX()
+			// TODO: create a new AnimalTrack() with the right name, and stick it in the
+			// projectdata
+
 			stage.show();
 
 		} finally {

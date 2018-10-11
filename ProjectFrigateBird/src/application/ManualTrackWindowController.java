@@ -23,9 +23,13 @@ public class ManualTrackWindowController {
 	@FXML
 	private Button undoBtn;
 	@FXML
-	private Button forwardFramesBtn;
+	private Button forwardTenFramesBtn;
 	@FXML
-	private Button backFramesBtn;
+	private Button backTenFramesBtn;
+	@FXML
+	private Button forwardFiftyFramesBtn;
+	@FXML
+	private Button backFiftyFramesBtn;
 	@FXML
 	private Canvas canvas;
 
@@ -76,7 +80,7 @@ public class ManualTrackWindowController {
 		settingPoint = true;
 	}
 
-	public void moveForwardFrames() {
+	public void moveForwardTenFrames() {
 		video.setCurrentFrameNum(video.getCurrentFrameNum()+10);
 		
 		Image curFrame = UtilsForOpenCV.matToJavaFXImage(video.readFrame());
@@ -86,8 +90,28 @@ public class ManualTrackWindowController {
 		});
 	}
 
-	public void moveBackFrames() {
+	public void moveBackTenFrames() {
 		video.setCurrentFrameNum(video.getCurrentFrameNum()-10);
+		
+		Image curFrame = UtilsForOpenCV.matToJavaFXImage(video.readFrame());
+		
+		Platform.runLater(() -> {
+		videoView.setImage(curFrame);
+		});
+	}
+	
+	public void moveForwardFiftyFrames() {
+		video.setCurrentFrameNum(video.getCurrentFrameNum()+50);
+		
+		Image curFrame = UtilsForOpenCV.matToJavaFXImage(video.readFrame());
+		
+		Platform.runLater(() -> {
+		videoView.setImage(curFrame);
+		});
+	}
+
+	public void moveBackFiftyFrames() {
+		video.setCurrentFrameNum(video.getCurrentFrameNum()-50);
 		
 		Image curFrame = UtilsForOpenCV.matToJavaFXImage(video.readFrame());
 		
