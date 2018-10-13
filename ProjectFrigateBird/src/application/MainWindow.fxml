@@ -52,7 +52,7 @@
             <StackPane prefHeight="150.0" prefWidth="200.0">
                <children>
                   <ImageView fx:id="videoView" fitHeight="389.0" fitWidth="533.0" pickOnBounds="true" preserveRatio="true" />
-                  <Canvas height="393.0" width="532.0" />
+                  <Canvas fx:id="canvas" height="393.0" onMouseClicked="#handleCanvasClicked" width="532.0" />
                </children>
             </StackPane>
             <Slider fx:id="vidSlider" maxWidth="-Infinity" prefHeight="14.0" prefWidth="563.0" />
@@ -83,9 +83,9 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button fx:id="originBtn" layoutX="23.0" layoutY="42.0" mnemonicParsing="false" text="Click to set origin" />
-                        <Button fx:id="horizontalBtn" layoutX="22.0" layoutY="79.0" mnemonicParsing="false" text="Click to set horizontal calibration" />
-                        <Button fx:id="verticalBtn" layoutX="22.0" layoutY="114.0" mnemonicParsing="false" text="Click to set vertical calibration" />
+                        <Button fx:id="originBtn" layoutX="23.0" layoutY="42.0" mnemonicParsing="false" onAction="#handleSetOrigin" text="Click to set origin" />
+                        <Button fx:id="horizontalBtn" layoutX="22.0" layoutY="79.0" mnemonicParsing="false" onAction="#handleSetHorizontalCalibration" text="Click to set horizontal calibration" />
+                        <Button fx:id="verticalBtn" layoutX="22.0" layoutY="114.0" mnemonicParsing="false" onAction="#handleSetVerticalCalibration" text="Click to set vertical calibration" />
                      </children>
                   </AnchorPane>
             </content>

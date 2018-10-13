@@ -81,6 +81,8 @@ public class MainWindowController implements AutoTrackListener {
 	private TextField currentFrameText;
 	@FXML
 	private TextField timeText;
+	@FXML
+	private Canvas canvas;
 
 	private ScheduledExecutorService timer;
 
@@ -88,6 +90,9 @@ public class MainWindowController implements AutoTrackListener {
 	private AutoTracker autotracker;
 	private Stage stage;
 	private boolean settingPoint = false;
+	private boolean originBtnClicked = false;
+	private boolean horizontalBtnClicked = false;
+	private boolean verticalBtnClicked = false;
 
 	@FXML
 	public void initialize() {
@@ -273,6 +278,76 @@ public class MainWindowController implements AutoTrackListener {
 
 		} finally {
 
+		}
+	}
+	
+	//Calibration
+	//not sure where to call the methods with mouseEvents in the parameters
+	//separate clicks or mouse drag for calibration?
+	
+	@FXML
+	public void handleSetOrigin() {
+		originBtnClicked = true;
+		System.out.println("origin button clicked");
+	}
+	
+	//2 parameters? error comes up when I try though
+	@FXML
+	public void originCalibration(MouseEvent event) {
+		
+		if(originBtnClicked) {
+			int x = event.getX();
+			int y = event.getY();
+			
+			TimePoint origin = new TimePoint(x, y, 0);
+		}
+	}
+	
+	@FXML
+	public void handleSetHorizontalCalibration() {
+		horizontalBtnClicked = true;
+		System.out.println("horizontal button clicked");
+
+	}
+	
+	@FXML
+	public void horizontalCalibration(MouseEvent event) {
+		
+		if(horizontalBtnClicked) {
+			int x = event.getX();
+			int y = event.getY();
+			
+			TimePoint horizontalPoint1 = new TimePoint(x, y, 0);
+		}
+	}
+	
+	@FXML
+	public void handleSetVerticalCalibration() {
+		verticalBtnClicked = true;
+		System.out.println("vertical button clicked");
+
+	}
+	
+	@FXML
+	public void verticalCalibration(MouseEvent event) {
+		
+		if(verticalBtnClicked) {
+			int x = event.getX();
+			int y = event.getY();
+			
+			TimePoint verticalPoint1 = new TimePoint(x, y, 0);
+		}
+	}
+	
+	//parameter or no?
+	@FXML
+	public void handleCanvasClicked(MouseEvent event) {
+		if(originBtnClicked) {
+			originCalibration(event);
+		}else if(horizontalBtnClicked) {
+			horizontalCalibration(event);
+		}else if(verticalBtnClicked) {
+			verticalCalibration(event);
 		}
 	}
 
