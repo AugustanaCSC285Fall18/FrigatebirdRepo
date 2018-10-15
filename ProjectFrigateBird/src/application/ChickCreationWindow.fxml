@@ -12,9 +12,9 @@
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
             <Label layoutX="75.0" layoutY="57.0" text="Name:" />
-            <TextField fx:id="nameTxtField" layoutX="135.0" layoutY="53.0" />
+            <TextField fx:id="nameTextField" layoutX="135.0" layoutY="53.0" />
             <ColorPicker fx:id="colorChooser" editable="true" layoutX="143.0" layoutY="100.0" />
-            <Button fx:id="addBtn" layoutX="120.0" layoutY="161.0" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="180.0" text="Add" />
+            <Button fx:id="addBtn" layoutX="120.0" layoutY="161.0" maxWidth="-Infinity" mnemonicParsing="false" onAction="#handleAddBtn" prefHeight="25.0" prefWidth="180.0" text="Add" />
             <Label layoutX="75.0" layoutY="104.0" text="Icon color:" />
          </children>
       </AnchorPane>

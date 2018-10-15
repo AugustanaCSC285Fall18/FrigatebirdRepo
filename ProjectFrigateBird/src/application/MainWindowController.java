@@ -1,6 +1,5 @@
 package application;
 
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -42,6 +41,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -244,11 +244,15 @@ public class MainWindowController implements AutoTrackListener {
 
 			stage.setTitle("Chick creation window");
 			stage.setScene(new Scene(root1));
+			
+			controller.setProject(project);
 
-			stage.showAndWait();
+			stage.show();
 			// TODO: controller.getXXX()
 			// TODO: create a new AnimalTrack() with the right name, and stick it in the
 			// projectdata
+			
+
 		} finally {
 
 		}
@@ -296,8 +300,8 @@ public class MainWindowController implements AutoTrackListener {
 	public void originCalibration(MouseEvent event) {
 		
 		if(originBtnClicked) {
-			int x = event.getX();
-			int y = event.getY();
+			double x = event.getX();
+			double y = event.getY();
 			
 			TimePoint origin = new TimePoint(x, y, 0);
 		}
@@ -314,8 +318,8 @@ public class MainWindowController implements AutoTrackListener {
 	public void horizontalCalibration(MouseEvent event) {
 		
 		if(horizontalBtnClicked) {
-			int x = event.getX();
-			int y = event.getY();
+			double x = event.getX();
+			double y = event.getY();
 			
 			TimePoint horizontalPoint1 = new TimePoint(x, y, 0);
 		}
@@ -332,8 +336,8 @@ public class MainWindowController implements AutoTrackListener {
 	public void verticalCalibration(MouseEvent event) {
 		
 		if(verticalBtnClicked) {
-			int x = event.getX();
-			int y = event.getY();
+			double x = event.getX();
+			double y = event.getY();
 			
 			TimePoint verticalPoint1 = new TimePoint(x, y, 0);
 		}
