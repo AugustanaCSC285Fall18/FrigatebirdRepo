@@ -1,5 +1,7 @@
 package application;
 
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -8,6 +10,8 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import javax.swing.JOptionPane;
 
 import org.opencv.core.Mat;
 import org.opencv.videoio.Videoio;
@@ -89,10 +93,10 @@ public class MainWindowController implements AutoTrackListener {
 	private ProjectData project;
 	private AutoTracker autotracker;
 	private Stage stage;
-	private boolean settingPoint = false;
-	private boolean originBtnClicked = false;
-	private boolean horizontalBtnClicked = false;
-	private boolean verticalBtnClicked = false;
+	
+	private boolean isMouseSettingOrigin = false;
+	private boolean isMouseSettingBounds = false;
+	private Point topLeftPointForBounds = null;
 
 	@FXML
 	public void initialize() {
@@ -291,68 +295,60 @@ public class MainWindowController implements AutoTrackListener {
 	
 	@FXML
 	public void handleSetOrigin() {
-		originBtnClicked = true;
+		isMouseSettingOrigin = true;
 		System.out.println("origin button clicked");
 	}
 	
-	//2 parameters? error comes up when I try though
-	@FXML
-	public void originCalibration(MouseEvent event) {
-		
-		if(originBtnClicked) {
-			double x = event.getX();
-			double y = event.getY();
-			
-			TimePoint origin = new TimePoint(x, y, 0);
-		}
-	}
+//	//2 parameters? error comes up when I try though
+//	@FXML
+//	public void originCalibration(MouseEvent event) {
+//		
+//		if(originBtnClicked) {
+//			double x = event.getX();
+//			double y = event.getY();
+//			
+//			TimePoint origin = new TimePoint(x, y, 0);
+//		}
+//	}
 	
-	@FXML
-	public void handleSetHorizontalCalibration() {
-		horizontalBtnClicked = true;
-		System.out.println("horizontal button clicked");
+	public void handleSetBounds() {
+		isMouseSettingBounds = true;
+		JOptionPane.showMessageDialog(null,"Please click the upper left corner of the box and then the bottom right corner.");
+		System.out.println(isMouseSettingBounds);
+		
+			
+	}
 
-	}
-	
-	@FXML
-	public void horizontalCalibration(MouseEvent event) {
-		
-		if(horizontalBtnClicked) {
-			double x = event.getX();
-			double y = event.getY();
-			
-			TimePoint horizontalPoint1 = new TimePoint(x, y, 0);
-		}
-	}
-	
-	@FXML
-	public void handleSetVerticalCalibration() {
-		verticalBtnClicked = true;
-		System.out.println("vertical button clicked");
-
-	}
-	
-	@FXML
-	public void verticalCalibration(MouseEvent event) {
-		
-		if(verticalBtnClicked) {
-			double x = event.getX();
-			double y = event.getY();
-			
-			TimePoint verticalPoint1 = new TimePoint(x, y, 0);
-		}
-	}
-	
+	@SuppressWarnings("unused")
 	//parameter or no?
 	@FXML
 	public void handleCanvasClicked(MouseEvent event) {
-		if(originBtnClicked) {
-			originCalibration(event);
-		}else if(horizontalBtnClicked) {
-			horizontalCalibration(event);
-		}else if(verticalBtnClicked) {
-			verticalCalibration(event);
+		int x = (int) event.getX();
+		int y = (int)event.getY();
+		if (isMouseSettingBounds) {
+			handleCanvasClickedSettingBounds(x,y);
+		} else if (isMouseSettingOrigin) {
+			
+		}		
+		
+	}
+	
+	public void handleCanvasClickedSettingBounds(int x, int y) {
+		if(topLeftPointForBounds  == null) {
+			topLeftPointForBounds = new Point(x, y);
+		} else {
+			Point bottomRightPoint = new Point(x,y);		
+			System.out.println("top left point: " + topLeftPointForBounds);
+			System.out.println("bottom right point: " + bottomRightPoint);
+
+			int width =(int) Math.abs(topLeftPointForBounds.getX() - bottomRightPoint.getX());
+			int height = (int) Math.abs(topLeftPointForBounds.getY() - bottomRightPoint.getY());
+
+			Rectangle bounds = new Rectangle((int) topLeftPointForBounds.getX(),(int)topLeftPointForBounds.getY(), width, height);
+			project.getVideo().setArenaBounds(bounds);
+			System.out.println(bounds);
 		}
+		
 	}
 
 //	public void setEmptyFrame() {
