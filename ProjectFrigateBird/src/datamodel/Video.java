@@ -45,6 +45,7 @@ public class Video {
 		}
 		vidCap.set(Videoio.CV_CAP_PROP_POS_FRAMES, (double) seekFrame);
 	}
+	
 
 	public int getCurrentFrameNum() {
 		return (int) vidCap.get(Videoio.CV_CAP_PROP_POS_FRAMES);
