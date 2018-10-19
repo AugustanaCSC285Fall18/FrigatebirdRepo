@@ -80,7 +80,11 @@ public class MainWindowController implements AutoTrackListener {
 	@FXML
 	private Button manualtrackBtn;
 	@FXML
+
 	private ChoiceBox chickChooser;
+
+	private Button setBlankFrameBtn;
+
 	@FXML
 	private Slider vidSlider;
 	@FXML
@@ -327,6 +331,8 @@ public class MainWindowController implements AutoTrackListener {
 //		}
 //	}
 
+	@FXML
+
 	public void handleSetBounds() {
 		isMouseSettingBounds = true;
 		JOptionPane.showMessageDialog(null,
@@ -347,12 +353,14 @@ public class MainWindowController implements AutoTrackListener {
 
 		}
 
+		handleCanvasClickedSettingOrigin(x, y);
 	}
 
 	public void handleCanvasClickedSettingBounds(int x, int y) {
 		if (topLeftPointForBounds == null) {
 			topLeftPointForBounds = new Point(x, y);
 		} else {
+
 			Point bottomRightPoint = new Point(x, y);
 			System.out.println("top left point: " + topLeftPointForBounds);
 			System.out.println("bottom right point: " + bottomRightPoint);
@@ -363,16 +371,20 @@ public class MainWindowController implements AutoTrackListener {
 			Rectangle bounds = new Rectangle((int) topLeftPointForBounds.getX(), (int) topLeftPointForBounds.getY(),
 					width, height);
 			project.getVideo().setArenaBounds(bounds);
-			System.out.println(bounds);
 		}
 
 	}
 
-//	public void setEmptyFrame() {
-//		Video video = project.getVideo();
-//		video.setEmptyFrameNum(video.getCurrentFrameNum());
-//		System.out.println(video.getEmptyFrameNum());
-//
-//	}
+	public void handleCanvasClickedSettingOrigin(int x, int y) {
+		Point point = new Point(x, y);
+		project.getVideo().setOriginPoint(point);
+	}
+
+	@FXML
+	public void handleSetBlankFrameBtn() {
+		Video video = project.getVideo();
+		video.setEmptyFrameNum(video.getCurrentFrameNum());
+		System.out.println(video.getEmptyFrameNum());
+	}
 
 }

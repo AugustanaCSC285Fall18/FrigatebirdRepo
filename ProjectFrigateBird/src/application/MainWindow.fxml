@@ -84,8 +84,9 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button fx:id="originBtn" layoutX="23.0" layoutY="42.0" mnemonicParsing="false" onAction="#handleSetOrigin" text="Click to set origin" />
-                        <Button fx:id="boundsBtn" layoutX="22.0" layoutY="79.0" mnemonicParsing="false" onAction="#handleSetBounds" text="Click to Set Bounds" />
+                        <Button fx:id="originBtn" layoutX="20.0" layoutY="74.0" mnemonicParsing="false" onAction="#handleSetOrigin" text="Click to set origin" />
+                        <Button fx:id="boundsBtn" layoutX="20.0" layoutY="109.0" mnemonicParsing="false" onAction="#handleSetBounds" text="Click to Set Bounds" />
+                        <Button fx:id="setBlankFrameBtn" layoutX="20.0" layoutY="40.0" mnemonicParsing="false" onAction="#handleSetBlankFrameBtn" text="Set Blank Frame" />
                      </children>
                   </AnchorPane>
             </content>
