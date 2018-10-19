@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -31,6 +32,8 @@ import datamodel.Video;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -40,6 +43,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -76,6 +80,8 @@ public class MainWindowController implements AutoTrackListener {
 	@FXML
 	private Button manualtrackBtn;
 	@FXML
+	private ChoiceBox chickChooser;
+	@FXML
 	private Slider vidSlider;
 	@FXML
 	private TextField startFrameLabel;
@@ -93,7 +99,8 @@ public class MainWindowController implements AutoTrackListener {
 	private ProjectData project;
 	private AutoTracker autotracker;
 	private Stage stage;
-	
+	private ArrayList<AnimalTrack> chicks;
+
 	private boolean isMouseSettingOrigin = false;
 	private boolean isMouseSettingBounds = false;
 	private Point topLeftPointForBounds = null;
@@ -118,6 +125,16 @@ public class MainWindowController implements AutoTrackListener {
 		if (chosenFile != null) {
 			loadVideo(chosenFile.getPath());
 		}
+
+	}
+
+	@FXML
+	public void handleChoiceBox() {
+		chickChooser.getItems().setAll(chicks);
+
+	}
+
+	public void addChick(String chickID, ArrayList<TimePoint> points) {
 
 	}
 
@@ -248,14 +265,13 @@ public class MainWindowController implements AutoTrackListener {
 
 			stage.setTitle("Chick creation window");
 			stage.setScene(new Scene(root1));
-			
+
 			controller.setProject(project);
 
 			stage.show();
 			// TODO: controller.getXXX()
 			// TODO: create a new AnimalTrack() with the right name, and stick it in the
 			// projectdata
-			
 
 		} finally {
 
@@ -288,17 +304,17 @@ public class MainWindowController implements AutoTrackListener {
 
 		}
 	}
-	
-	//Calibration
-	//not sure where to call the methods with mouseEvents in the parameters
-	//separate clicks or mouse drag for calibration?
-	
+
+	// Calibration
+	// not sure where to call the methods with mouseEvents in the parameters
+	// separate clicks or mouse drag for calibration?
+
 	@FXML
 	public void handleSetOrigin() {
 		isMouseSettingOrigin = true;
 		System.out.println("origin button clicked");
 	}
-	
+
 //	//2 parameters? error comes up when I try though
 //	@FXML
 //	public void originCalibration(MouseEvent event) {
@@ -310,45 +326,46 @@ public class MainWindowController implements AutoTrackListener {
 //			TimePoint origin = new TimePoint(x, y, 0);
 //		}
 //	}
-	
+
 	public void handleSetBounds() {
 		isMouseSettingBounds = true;
-		JOptionPane.showMessageDialog(null,"Please click the upper left corner of the box and then the bottom right corner.");
+		JOptionPane.showMessageDialog(null,
+				"Please click the upper left corner of the box and then the bottom right corner.");
 		System.out.println(isMouseSettingBounds);
-		
-			
+
 	}
 
 	@SuppressWarnings("unused")
-	//parameter or no?
+	// parameter or no?
 	@FXML
 	public void handleCanvasClicked(MouseEvent event) {
 		int x = (int) event.getX();
-		int y = (int)event.getY();
+		int y = (int) event.getY();
 		if (isMouseSettingBounds) {
-			handleCanvasClickedSettingBounds(x,y);
+			handleCanvasClickedSettingBounds(x, y);
 		} else if (isMouseSettingOrigin) {
-			
-		}		
-		
+
+		}
+
 	}
-	
+
 	public void handleCanvasClickedSettingBounds(int x, int y) {
-		if(topLeftPointForBounds  == null) {
+		if (topLeftPointForBounds == null) {
 			topLeftPointForBounds = new Point(x, y);
 		} else {
-			Point bottomRightPoint = new Point(x,y);		
+			Point bottomRightPoint = new Point(x, y);
 			System.out.println("top left point: " + topLeftPointForBounds);
 			System.out.println("bottom right point: " + bottomRightPoint);
 
-			int width =(int) Math.abs(topLeftPointForBounds.getX() - bottomRightPoint.getX());
+			int width = (int) Math.abs(topLeftPointForBounds.getX() - bottomRightPoint.getX());
 			int height = (int) Math.abs(topLeftPointForBounds.getY() - bottomRightPoint.getY());
 
-			Rectangle bounds = new Rectangle((int) topLeftPointForBounds.getX(),(int)topLeftPointForBounds.getY(), width, height);
+			Rectangle bounds = new Rectangle((int) topLeftPointForBounds.getX(), (int) topLeftPointForBounds.getY(),
+					width, height);
 			project.getVideo().setArenaBounds(bounds);
 			System.out.println(bounds);
 		}
-		
+
 	}
 
 //	public void setEmptyFrame() {

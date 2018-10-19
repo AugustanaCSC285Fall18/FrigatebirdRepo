@@ -15,7 +15,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import utils.UtilsForOpenCV;
 
-public class ChickCreationWindowController {
+public class ChickCreationWindowController extends MainWindowController {
 
 	@FXML
 	private TextField nameTextField;
@@ -40,10 +40,8 @@ public class ChickCreationWindowController {
 	public void handleAddBtn() {
 		String chickName = nameTextField.getText();
 		AnimalTrack chick = new AnimalTrack(nameTextField.getText());
-		
+
 		project.getTracks().add(chick);
 
-
-		System.out.println(project.getTracks());
-	}	
+	}
 }

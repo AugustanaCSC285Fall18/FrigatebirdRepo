@@ -70,6 +70,7 @@ public class ManualTrackWindowController {
 			TimePoint point1 = new TimePoint(x, y, 0);
 			// add to the appropriate animaltrack list in the project
 			// based on which chick the user has selected to be tracking right now
+			settingPoint = false;
 
 		}
 
