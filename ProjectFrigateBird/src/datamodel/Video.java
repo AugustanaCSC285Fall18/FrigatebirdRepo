@@ -1,5 +1,6 @@
 package datamodel;
 
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.FileNotFoundException;
 
@@ -14,6 +15,7 @@ public class Video {
 	private int emptyFrameNum;
 	private int startFrameNum;
 	private int endFrameNum;
+	private Point origin;
 
 	private double xPixelsPerCm;
 	private double yPixelsPerCm;
@@ -114,6 +116,14 @@ public class Video {
 
 	public void setArenaBounds(Rectangle arenaBounds) {
 		this.arenaBounds = arenaBounds;
+	}
+	
+	public Point getOriginPoint() {
+		return origin; 
+	}
+	
+	public void setOriginPoint(Point point) {
+		origin = point;
 	}
 
 	public double convertFrameNumsToSeconds(int numFrames) {

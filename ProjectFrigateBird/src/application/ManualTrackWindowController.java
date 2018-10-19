@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -23,13 +24,11 @@ public class ManualTrackWindowController {
 	@FXML
 	private Button undoBtn;
 	@FXML
-	private Button forwardTenFramesBtn;
+	private Button forwardXFramesBtn;
 	@FXML
-	private Button backTenFramesBtn;
+	private Button backXFramesBtn;
 	@FXML
-	private Button forwardFiftyFramesBtn;
-	@FXML
-	private Button backFiftyFramesBtn;
+	private TextField frameJumpTextField;
 	@FXML
 	private Canvas canvas;
 
@@ -70,6 +69,7 @@ public class ManualTrackWindowController {
 			TimePoint point1 = new TimePoint(x, y, 0);
 			// add to the appropriate animaltrack list in the project
 			// based on which chick the user has selected to be tracking right now
+			settingPoint = false;
 
 		}
 
@@ -80,8 +80,11 @@ public class ManualTrackWindowController {
 		settingPoint = true;
 	}
 
-	public void moveForwardTenFrames() {
-		video.setCurrentFrameNum(video.getCurrentFrameNum()+10);
+	@FXML
+	public void moveForwardXSeconds() {
+		int frameJumpNum = video.convertSecondsToFrameNums(Integer.parseInt(frameJumpTextField.getText()));
+		
+		video.setCurrentFrameNum(video.getCurrentFrameNum()+ frameJumpNum);
 		
 		Image curFrame = UtilsForOpenCV.matToJavaFXImage(video.readFrame());
 		
@@ -90,8 +93,11 @@ public class ManualTrackWindowController {
 		});
 	}
 
-	public void moveBackTenFrames() {
-		video.setCurrentFrameNum(video.getCurrentFrameNum()-10);
+	@FXML
+	public void moveBackXSeconds() {
+		int frameJumpNum = video.convertSecondsToFrameNums(Integer.parseInt(frameJumpTextField.getText()));
+		
+		video.setCurrentFrameNum(video.getCurrentFrameNum() - frameJumpNum);
 		
 		Image curFrame = UtilsForOpenCV.matToJavaFXImage(video.readFrame());
 		
@@ -100,25 +106,12 @@ public class ManualTrackWindowController {
 		});
 	}
 	
-	public void moveForwardFiftyFrames() {
-		video.setCurrentFrameNum(video.getCurrentFrameNum()+50);
-		
-		Image curFrame = UtilsForOpenCV.matToJavaFXImage(video.readFrame());
-		
-		Platform.runLater(() -> {
-		videoView.setImage(curFrame);
-		});
+	@FXML
+	public void updateFrameJumpButtons() {
+		backXFramesBtn.setText("Move Back " + frameJumpTextField.getText() + " Seconds");
+		forwardXFramesBtn.setText("Move Forward " + frameJumpTextField.getText() + " Seconds");
 	}
 
-	public void moveBackFiftyFrames() {
-		video.setCurrentFrameNum(video.getCurrentFrameNum()-50);
-		
-		Image curFrame = UtilsForOpenCV.matToJavaFXImage(video.readFrame());
-		
-		Platform.runLater(() -> {
-		videoView.setImage(curFrame);
-		});
-	}
 
 	public void undoPoint() {
 

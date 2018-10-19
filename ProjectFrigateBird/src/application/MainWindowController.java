@@ -76,6 +76,8 @@ public class MainWindowController implements AutoTrackListener {
 	@FXML
 	private Button manualtrackBtn;
 	@FXML
+	private Button setBlankFrameBtn;
+	@FXML
 	private Slider vidSlider;
 	@FXML
 	private TextField startFrameLabel;
@@ -310,7 +312,7 @@ public class MainWindowController implements AutoTrackListener {
 //			TimePoint origin = new TimePoint(x, y, 0);
 //		}
 //	}
-	
+	@FXML
 	public void handleSetBounds() {
 		isMouseSettingBounds = true;
 		JOptionPane.showMessageDialog(null,"Please click the upper left corner of the box and then the bottom right corner.");
@@ -328,7 +330,7 @@ public class MainWindowController implements AutoTrackListener {
 		if (isMouseSettingBounds) {
 			handleCanvasClickedSettingBounds(x,y);
 		} else if (isMouseSettingOrigin) {
-			
+			handleCanvasClickedSettingOrigin(x,y);
 		}		
 		
 	}
@@ -338,24 +340,26 @@ public class MainWindowController implements AutoTrackListener {
 			topLeftPointForBounds = new Point(x, y);
 		} else {
 			Point bottomRightPoint = new Point(x,y);		
-			System.out.println("top left point: " + topLeftPointForBounds);
-			System.out.println("bottom right point: " + bottomRightPoint);
 
 			int width =(int) Math.abs(topLeftPointForBounds.getX() - bottomRightPoint.getX());
 			int height = (int) Math.abs(topLeftPointForBounds.getY() - bottomRightPoint.getY());
 
 			Rectangle bounds = new Rectangle((int) topLeftPointForBounds.getX(),(int)topLeftPointForBounds.getY(), width, height);
 			project.getVideo().setArenaBounds(bounds);
-			System.out.println(bounds);
 		}
 		
 	}
+	
+	public void handleCanvasClickedSettingOrigin(int x, int y) {
+		Point point = new Point(x,y);
+		project.getVideo().setOriginPoint(point);
+	}
+	@FXML
+	public void handleSetBlankFrameBtn() {
+		Video video = project.getVideo();
+		video.setEmptyFrameNum(video.getCurrentFrameNum());
+		System.out.println(video.getEmptyFrameNum());
+	}
 
-//	public void setEmptyFrame() {
-//		Video video = project.getVideo();
-//		video.setEmptyFrameNum(video.getCurrentFrameNum());
-//		System.out.println(video.getEmptyFrameNum());
-//
-//	}
 
 }
