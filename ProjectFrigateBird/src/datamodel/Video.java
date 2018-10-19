@@ -38,6 +38,11 @@ public class Video {
 	}
 
 	public void setCurrentFrameNum(int seekFrame) {
+		if (seekFrame < 0) {
+			seekFrame = 0;
+		} else if (seekFrame >= getEndFrameNum()) {
+			seekFrame = getEndFrameNum();
+		}
 		vidCap.set(Videoio.CV_CAP_PROP_POS_FRAMES, (double) seekFrame);
 	}
 
