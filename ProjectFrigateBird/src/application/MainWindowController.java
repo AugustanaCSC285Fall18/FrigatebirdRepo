@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -44,9 +45,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -80,8 +83,7 @@ public class MainWindowController implements AutoTrackListener {
 	@FXML
 	private Button manualtrackBtn;
 	@FXML
-
-	private ChoiceBox chickChooser;
+	private ComboBox chickChooser;
 
 	private Button setBlankFrameBtn;
 
@@ -110,10 +112,7 @@ public class MainWindowController implements AutoTrackListener {
 	private Point topLeftPointForBounds = null;
 
 	@FXML
-	public void initialize() {
-		// loadVideo("S:/class/cs/285/sample_videos/sample1.mp4");
-		// project.getVideo().setXPixelsPerCm(6.5); // these are just rough estimates!
-		// project.getVideo().setYPixelsPerCm(6.7);
+	public void initializeWithStage(Stage stage) {
 
 		vidSlider.valueProperty().addListener((obs, oldV, newV) -> showFrameAt(newV.intValue()));
 
@@ -135,10 +134,6 @@ public class MainWindowController implements AutoTrackListener {
 	@FXML
 	public void handleChoiceBox() {
 		chickChooser.getItems().setAll(chicks);
-
-	}
-
-	public void addChick(String chickID, ArrayList<TimePoint> points) {
 
 	}
 
@@ -259,30 +254,32 @@ public class MainWindowController implements AutoTrackListener {
 
 	}
 
-	@FXML
-	public void handleAddChickBtn() throws IOException {
-		try {
-			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ChickCreationWindow.fxml"));
-			Parent root1 = (Parent) fxmlLoader.load();
-			ChickCreationWindowController controller = fxmlLoader.getController();
-			Stage stage = new Stage();
+//	@FXML
+//	public void handleAddChickBtn() throws IOException {
+//		try {
+//			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ChickCreationWindow.fxml"));
+//			Parent root1 = (Parent) fxmlLoader.load();
+//			ChickCreationWindowController controller = fxmlLoader.getController();
+//			Stage stage = new Stage();
+//
+//			stage.setTitle("Chick creation window");
+//			stage.setScene(new Scene(root1));
+//
+//			controller.setProject(project);
+//
+//			stage.show();
+//
+//			// TODO: controller.getXXX()
+//			// TODO: create a new AnimalTrack() with the right name, and stick it in the
+//			// projectdata
+//
+//		} finally {
+//
+//		}
+//
+//	}
 
-			stage.setTitle("Chick creation window");
-			stage.setScene(new Scene(root1));
-
-			controller.setProject(project);
-
-			stage.show();
-			// TODO: controller.getXXX()
-			// TODO: create a new AnimalTrack() with the right name, and stick it in the
-			// projectdata
-
-		} finally {
-
-		}
-
-	}
-
+	@SuppressWarnings("unchecked")
 	@FXML
 	public void handleManualTrackBtn() throws IOException {
 
@@ -301,6 +298,10 @@ public class MainWindowController implements AutoTrackListener {
 			// TODO: controller.getXXX()
 			// TODO: create a new AnimalTrack() with the right name, and stick it in the
 			// projectdata
+			
+			for(int i = 0; i < project.getTracks().size()-1; i++) {
+				controller.getChickChooser().getItems().add(project.getTracks().get(i));
+			}
 
 			stage.show();
 
@@ -385,6 +386,23 @@ public class MainWindowController implements AutoTrackListener {
 		Video video = project.getVideo();
 		video.setEmptyFrameNum(video.getCurrentFrameNum());
 		System.out.println(video.getEmptyFrameNum());
+	}
+	
+	@SuppressWarnings("unchecked")
+	@FXML
+	public void handleAddChickBtn() {
+		TextInputDialog nameEnter = new TextInputDialog();
+		nameEnter.setTitle("Add Chicks");
+		nameEnter.setHeaderText("Chick Creation Menu");
+		nameEnter.setContentText("Enter Chick's Name");
+		
+		Optional<String> result = nameEnter.showAndWait();
+		if (result.isPresent()){
+			String chickName = result.get(); 
+			project.getTracks().add(new AnimalTrack(chickName));
+			chickChooser.getItems().add(chickName);
+			chickChooser.getSelectionModel().select(chickName);
+		}		
 	}
 
 }

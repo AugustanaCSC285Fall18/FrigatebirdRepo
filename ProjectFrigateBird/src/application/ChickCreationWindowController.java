@@ -42,6 +42,7 @@ public class ChickCreationWindowController extends MainWindowController {
 		AnimalTrack chick = new AnimalTrack(nameTextField.getText());
 
 		project.getTracks().add(chick);
+	
 
 	}
 }

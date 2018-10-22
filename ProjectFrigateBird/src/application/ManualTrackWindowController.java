@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -31,6 +32,7 @@ public class ManualTrackWindowController {
 	private TextField frameJumpTextField;
 	@FXML
 	private Canvas canvas;
+	@FXML private ComboBox chickChooser;
 
 	private boolean settingPoint = false;
 
@@ -116,4 +118,11 @@ public class ManualTrackWindowController {
 	public void undoPoint() {
 
 	}
+
+	public ComboBox getChickChooser() {
+		// TODO Auto-generated method stub
+		return chickChooser;
+	}
+
+	
 }
