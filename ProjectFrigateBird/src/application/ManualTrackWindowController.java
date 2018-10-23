@@ -47,6 +47,9 @@ public class ManualTrackWindowController {
 	private ProjectData project;
 	private Video video;
 	
+	public static final Color[] TRACK_COLORS = new Color[] { Color.RED, Color.BLUE, Color.GREEN, Color.CYAN,
+			Color.MAGENTA, Color.BLUEVIOLET, Color.ORANGE };
+	
 
 	
 	@FXML
@@ -97,12 +100,14 @@ public class ManualTrackWindowController {
 				double unscaledX = event.getX() / scalingRatio;
 				double unscaledY = event.getY() / scalingRatio;
 				selectedTrack.setTimePointAtTime(unscaledX, unscaledY, curFrameNum);
-				moveForwardXSeconds();
+				autoJumpForward();
 			} else {
 				new Alert(AlertType.WARNING, "You must ADD a chick first!").showAndWait();
 			}
 
-			settingPoint = false;
+//			settingPoint = false;
+			
+			System.out.println(project.getTracks().toString());
 
 		}
 
@@ -112,50 +117,45 @@ public class ManualTrackWindowController {
 	public void handleSetPointBtn() {
 		settingPoint = true;
 	}
-
-	@FXML
-	public void moveForwardXSeconds() {
-		int frameJumpNum = video.convertSecondsToFrameNums(Integer.parseInt(frameJumpTextField.getText()));
-		
-		video.setCurrentFrameNum(video.getCurrentFrameNum()+ frameJumpNum);
-		
-		Image curFrame = UtilsForOpenCV.matToJavaFXImage(video.readFrame());
-		
-		vidSlider.setValue(project.getVideo().getCurrentFrameNum());
-		
-		Platform.runLater(() -> {
-		videoView.setImage(curFrame);
-		});
-		
-	}
 	
-	public void autoJumpForward() {
-		
-		video.setCurrentFrameNum(video.getCurrentFrameNum()+ 20);
+	private void moveVideoForwardByAmount(int framesForward) {
+		video.setCurrentFrameNum(video.getCurrentFrameNum()+ framesForward);
 		
 		Image curFrame = UtilsForOpenCV.matToJavaFXImage(video.readFrame());
 		
 		vidSlider.setValue(project.getVideo().getCurrentFrameNum());
 		
 		Platform.runLater(() -> {
-		videoView.setImage(curFrame);
+			videoView.setImage(curFrame);
 		});
 	}
 
-	@FXML
-	public void moveBackXSeconds() {
-		int frameJumpNum = video.convertSecondsToFrameNums(Integer.parseInt(frameJumpTextField.getText()));
-		
-		video.setCurrentFrameNum(video.getCurrentFrameNum() - frameJumpNum);
-		
-		Image curFrame = UtilsForOpenCV.matToJavaFXImage(video.readFrame());
-		
-		vidSlider.setValue(project.getVideo().getCurrentFrameNum());
-		
-		Platform.runLater(() -> {
-		videoView.setImage(curFrame);
-		});
+	private void autoJumpForward() {		
+		moveVideoForwardByAmount(20);
 	}
+
+	private void moveForwardOrBackByUserAmount(boolean forward) {
+		
+		try { 
+			int frameJumpNum = video.convertSecondsToFrameNums(Integer.parseInt(frameJumpTextField.getText()));
+			if (forward ) {
+				moveVideoForwardByAmount(frameJumpNum);				
+			} else {
+				moveVideoForwardByAmount(- frameJumpNum); //negative for backward				
+			}			
+		} catch (NumberFormatException ex) {
+			new Alert(AlertType.WARNING, "Please enter the # of seconds to move first.").showAndWait();
+		}
+	}
+	@FXML
+	private void moveForwardXSeconds() {
+		moveForwardOrBackByUserAmount(true);
+	}
+	@FXML
+	private void moveBackXSeconds() {
+		moveForwardOrBackByUserAmount(false);
+	}
+
 	
 	@FXML
 	public void updateFrameJumpButtons() {
@@ -180,25 +180,58 @@ public class ManualTrackWindowController {
 	}
 	
 	public void showFrameAt(int frameNum) {
-//		if (timer != null && !timer.isShutdown()) {
-//			timer.shutdown();
-//			try {
-//				timer.awaitTermination(1000, TimeUnit.MILLISECONDS);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//		}
+
 
 			project.getVideo().setCurrentFrameNum(frameNum);
 			Image curFrame = UtilsForOpenCV.matToJavaFXImage(project.getVideo().readFrame());
-			double timeInSeconds = project.getVideo().convertFrameNumsToSeconds(frameNum);
-			int minutes = (int) (timeInSeconds / 60);
-			int seconds = (int) (timeInSeconds % 60);
+			
+			GraphicsContext g = canvas.getGraphicsContext2D();
 
+			
+//			drawAssignedAnimalTracks(g, setImageScalingRatio(), frameNum);
+//			drawUnassignedSegments(g, setImageScalingRatio(), frameNum);
+//			
+			
 			Platform.runLater(() -> {
 				videoView.setImage(curFrame);
 	
 			});
 		}
+	
+	private void drawAssignedAnimalTracks(GraphicsContext g, double scalingRatio, int frameNum) {
+		for (int i = 0; i < project.getTracks().size(); i++) {
+			AnimalTrack track = project.getTracks().get(i);
+			Color trackColor = TRACK_COLORS[i % TRACK_COLORS.length];
+			Color trackPrevColor = trackColor.deriveColor(0, 0.5, 1.5, 1.0); // subtler variant
+
+			g.setFill(trackPrevColor);
+			// draw chick's recent trail from the last few seconds
+			for (TimePoint prevPt : track.getTimePointsWithinInterval(frameNum - 90, frameNum)) {
+				g.fillOval(prevPt.getX() * scalingRatio - 3, prevPt.getY() * scalingRatio - 3, 7, 7);
+			}
+			// draw the current point (if any) as a larger dot
+			TimePoint currPt = track.getTimePointAtTime(frameNum);
+			if (currPt != null) {
+				g.setFill(trackColor);
+				g.fillOval(currPt.getX() * scalingRatio - 7, currPt.getY() * scalingRatio - 7, 15, 15);
+			}
+		}
+	}
+	
+	private void drawUnassignedSegments(GraphicsContext g, double scalingRatio, int frameNum) {
+		for (AnimalTrack segment : project.getUnassignedSegments()) {
+
+			g.setFill(Color.DARKGRAY);
+			// draw this segments recent past & near future locations
+			for (TimePoint prevPt : segment.getTimePointsWithinInterval(frameNum - 30, frameNum + 30)) {
+				g.fillRect(prevPt.getX() * scalingRatio - 1, prevPt.getY() * scalingRatio - 1, 2, 2);
+			}
+			// draw the current point (if any) as a larger square
+			TimePoint currPt = segment.getTimePointAtTime(frameNum);
+			if (currPt != null) {
+				g.fillRect(currPt.getX() * scalingRatio - 5, currPt.getY() * scalingRatio - 5, 11, 11);
+			}
+		}
+	}
 	}
 	

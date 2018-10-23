@@ -272,9 +272,11 @@ public class MainWindowController implements AutoTrackListener {
 			// TODO: create a new AnimalTrack() with the right name, and stick it in the
 			// projectdata
 			
-			for(int i = 0; i < project.getTracks().size()-1; i++) {
+			for(int i = 0; i < chickChooser.getItems().size(); i++) {
 				controller.getChickChooser().getItems().add(chickChooser.getItems().get(i));
+				controller.getChickChooser().getSelectionModel().select(0);
 			}
+			
 			
 			controller.initializeWithStage(stage);
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 
 
+
 public class AnimalTrack {
 
 	public static final String UNNAMED_ID = "<<unassigned>>";
@@ -72,5 +73,15 @@ public class AnimalTrack {
 		} else {
 			add(new TimePoint(x, y, frameNum));
 		}
+	}
+	
+	public List<TimePoint> getTimePointsWithinInterval(int startFrameNum, int endFrameNum) {
+		List<TimePoint> pointsInInterval = new ArrayList<>();
+		for (TimePoint pt : positions) {
+			if (pt.getFrameNum() >= startFrameNum && pt.getFrameNum() <= endFrameNum) {
+				pointsInInterval.add(pt);
+			}
+		}
+		return pointsInInterval;
 	}
 }
