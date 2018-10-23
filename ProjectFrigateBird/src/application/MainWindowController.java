@@ -83,7 +83,7 @@ public class MainWindowController implements AutoTrackListener {
 	@FXML
 	private Button manualtrackBtn;
 	@FXML
-	private ComboBox chickChooser;
+	private ComboBox<String> chickChooser;
 
 	private Button setBlankFrameBtn;
 
@@ -105,7 +105,7 @@ public class MainWindowController implements AutoTrackListener {
 	private ProjectData project;
 	private AutoTracker autotracker;
 	private Stage stage;
-	private ArrayList<AnimalTrack> chicks;
+
 
 	private boolean isMouseSettingOrigin = false;
 	private boolean isMouseSettingBounds = false;
@@ -132,11 +132,7 @@ public class MainWindowController implements AutoTrackListener {
 	}
 
 	@FXML
-	public void handleChoiceBox() {
-		chickChooser.getItems().setAll(chicks);
-
-	}
-
+	
 	public void loadVideo(String filePath) {
 		try {
 			project = new ProjectData(filePath);
@@ -254,30 +250,7 @@ public class MainWindowController implements AutoTrackListener {
 
 	}
 
-//	@FXML
-//	public void handleAddChickBtn() throws IOException {
-//		try {
-//			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ChickCreationWindow.fxml"));
-//			Parent root1 = (Parent) fxmlLoader.load();
-//			ChickCreationWindowController controller = fxmlLoader.getController();
-//			Stage stage = new Stage();
-//
-//			stage.setTitle("Chick creation window");
-//			stage.setScene(new Scene(root1));
-//
-//			controller.setProject(project);
-//
-//			stage.show();
-//
-//			// TODO: controller.getXXX()
-//			// TODO: create a new AnimalTrack() with the right name, and stick it in the
-//			// projectdata
-//
-//		} finally {
-//
-//		}
-//
-//	}
+
 
 	@SuppressWarnings("unchecked")
 	@FXML
@@ -301,7 +274,10 @@ public class MainWindowController implements AutoTrackListener {
 			
 			for(int i = 0; i < project.getTracks().size()-1; i++) {
 				controller.getChickChooser().getItems().add(project.getTracks().get(i));
+				System.out.println("hello");
 			}
+			
+			controller.initializeWithStage(stage);
 
 			stage.show();
 
@@ -351,10 +327,9 @@ public class MainWindowController implements AutoTrackListener {
 		if (isMouseSettingBounds) {
 			handleCanvasClickedSettingBounds(x, y);
 		} else if (isMouseSettingOrigin) {
-
+			handleCanvasClickedSettingOrigin(x, y);
 		}
-
-		handleCanvasClickedSettingOrigin(x, y);
+		
 	}
 
 	public void handleCanvasClickedSettingBounds(int x, int y) {
@@ -388,7 +363,6 @@ public class MainWindowController implements AutoTrackListener {
 		System.out.println(video.getEmptyFrameNum());
 	}
 	
-	@SuppressWarnings("unchecked")
 	@FXML
 	public void handleAddChickBtn() {
 		TextInputDialog nameEnter = new TextInputDialog();
@@ -399,10 +373,16 @@ public class MainWindowController implements AutoTrackListener {
 		Optional<String> result = nameEnter.showAndWait();
 		if (result.isPresent()){
 			String chickName = result.get(); 
-			project.getTracks().add(new AnimalTrack(chickName));
+			AnimalTrack chickToAdd = new AnimalTrack(chickName);
+			project.getTracks().add(chickToAdd);
 			chickChooser.getItems().add(chickName);
 			chickChooser.getSelectionModel().select(chickName);
 		}		
+	}
+	
+	public void handleDeleteChickBtn() {
+		project.getTracks().remove(chickChooser.getSelectionModel().getSelectedIndex());
+		chickChooser.getItems().remove(chickChooser.getSelectionModel().getSelectedIndex());
 	}
 
 }

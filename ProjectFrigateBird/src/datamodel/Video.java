@@ -145,5 +145,13 @@ public class Video {
 	public int convertSecondsToFrameNums(double numSecs) {
 		return (int) Math.round(numSecs * getFrameRate());
 	}
+	
+	public synchronized int getFrameWidth() {
+		return (int) vidCap.get(Videoio.CAP_PROP_FRAME_WIDTH);
+	}
+
+	public synchronized int getFrameHeight() {
+		return (int) vidCap.get(Videoio.CAP_PROP_FRAME_HEIGHT);
+	}
 
 }
