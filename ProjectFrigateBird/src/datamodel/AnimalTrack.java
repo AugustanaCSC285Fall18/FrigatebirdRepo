@@ -3,6 +3,8 @@ package datamodel;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class AnimalTrack {
 
 	public static final String UNNAMED_ID = "<<unassigned>>";
@@ -60,5 +62,15 @@ public class AnimalTrack {
 		int endFrame = getFinalTimePoint().getFrameNum();
 		return "AnimalTrack[id=" + animalID + ",numPts=" + positions.size() + " start=" + startFrame + " end="
 				+ endFrame + "]";
+	}
+	
+	public void setTimePointAtTime(double x, double y, int frameNum) {
+		TimePoint oldPt = getTimePointAtTime(frameNum);
+		if (oldPt != null) {
+			oldPt.setX(x);
+			oldPt.setY(y);
+		} else {
+			add(new TimePoint(x, y, frameNum));
+		}
 	}
 }
