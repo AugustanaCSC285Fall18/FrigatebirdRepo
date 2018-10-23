@@ -273,8 +273,7 @@ public class MainWindowController implements AutoTrackListener {
 			// projectdata
 			
 			for(int i = 0; i < project.getTracks().size()-1; i++) {
-				controller.getChickChooser().getItems().add(project.getTracks().get(i));
-				System.out.println("hello");
+				controller.getChickChooser().getItems().add(chickChooser.getItems().get(i));
 			}
 			
 			controller.initializeWithStage(stage);

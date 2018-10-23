@@ -65,11 +65,7 @@ public class ManualTrackWindowController {
 		Image curFrame = UtilsForOpenCV.matToJavaFXImage(video.readFrame());
 		//System.out.println(curFrame);
 		
-		for (int i = 0; i < project.getTracks().size()-1; i++) {
-			chickChooser.getItems().add(project.getTracks().get(i).getID());
-
-		}
-		
+	
 		
 		Platform.runLater(() -> {
 		videoView.setImage(curFrame);
@@ -125,9 +121,12 @@ public class ManualTrackWindowController {
 		
 		Image curFrame = UtilsForOpenCV.matToJavaFXImage(video.readFrame());
 		
+		vidSlider.setValue(project.getVideo().getCurrentFrameNum());
+		
 		Platform.runLater(() -> {
 		videoView.setImage(curFrame);
 		});
+		
 	}
 	
 	public void autoJumpForward() {
@@ -135,6 +134,8 @@ public class ManualTrackWindowController {
 		video.setCurrentFrameNum(video.getCurrentFrameNum()+ 20);
 		
 		Image curFrame = UtilsForOpenCV.matToJavaFXImage(video.readFrame());
+		
+		vidSlider.setValue(project.getVideo().getCurrentFrameNum());
 		
 		Platform.runLater(() -> {
 		videoView.setImage(curFrame);
@@ -148,6 +149,8 @@ public class ManualTrackWindowController {
 		video.setCurrentFrameNum(video.getCurrentFrameNum() - frameJumpNum);
 		
 		Image curFrame = UtilsForOpenCV.matToJavaFXImage(video.readFrame());
+		
+		vidSlider.setValue(project.getVideo().getCurrentFrameNum());
 		
 		Platform.runLater(() -> {
 		videoView.setImage(curFrame);
