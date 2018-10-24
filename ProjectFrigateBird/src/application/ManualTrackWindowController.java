@@ -88,8 +88,6 @@ public class ManualTrackWindowController {
 			g.setFill(Color.BLUE);
 			g.fillRoundRect(x, y, 10, 10, 10, 10);
 
-
-			TimePoint addingPoint = new TimePoint(x, y, 0);
 			
 			int chickIndex = chickChooser.getSelectionModel().getSelectedIndex();
 			if (chickIndex >= 0) {
@@ -175,6 +173,8 @@ public class ManualTrackWindowController {
 
 	public void undoPoint() {
 		//TODO:
+		moveVideoForwardByAmount(-10);
+		
 	}
 
 	public ComboBox getChickChooser() {
