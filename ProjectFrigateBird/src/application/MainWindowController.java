@@ -118,9 +118,9 @@ public class MainWindowController implements AutoTrackListener {
 	public void initializeWithStage(Stage stage) {
 
 		vidSlider.valueProperty().addListener((obs, oldV, newV) -> showFrameAt(newV.intValue()));
-
 	}
-
+	
+	
 	@FXML
 	public void handleBrowse() {
 		// System.out.println("BROWSERING");
@@ -182,7 +182,8 @@ public class MainWindowController implements AutoTrackListener {
 
 	@FXML
 	public void handleStartAutotracking() throws InterruptedException {
-		if (autotracker == null || !autotracker.isRunning()) {
+		try {
+			if (autotracker == null || !autotracker.isRunning()) {
 			Video video = project.getVideo();
 			video.setStartFrameNum(Integer.parseInt(startFrameLabel.getText()));
 			video.setEndFrameNum(Integer.parseInt(endFrameLabel.getText()));
@@ -195,10 +196,14 @@ public class MainWindowController implements AutoTrackListener {
 			// so that we don't freeze up the main JavaFX UI thread.
 			autotracker.startAnalysis(video);
 			trackingBtn.setText("CANCEL auto-tracking");
-		} else {
-			autotracker.cancelAnalysis();
-			trackingBtn.setText("Start auto-tracking");
+			} else {
+				autotracker.cancelAnalysis();
+				trackingBtn.setText("Start auto-tracking");
+			}
+		}catch (Exception e){
+			JOptionPane.showMessageDialog(null, "Please load video");
 		}
+		
 
 	}
 
@@ -285,6 +290,8 @@ public class MainWindowController implements AutoTrackListener {
 
 			stage.show();
 
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Please load video");
 		} finally {
 
 		}
@@ -296,8 +303,13 @@ public class MainWindowController implements AutoTrackListener {
 
 	@FXML
 	public void handleSetOrigin() {
-		isMouseSettingOrigin = true;
-		System.out.println("origin button clicked");
+		try {
+			isMouseSettingOrigin = true;
+			System.out.println("origin button clicked");
+		}catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Please load video");
+
+		}
 	}
 
 //	//2 parameters? error comes up when I try though
@@ -315,10 +327,16 @@ public class MainWindowController implements AutoTrackListener {
 	@FXML
 
 	public void handleSetBounds() {
-		isMouseSettingBounds = true;
-		JOptionPane.showMessageDialog(null,
-				"Please click the upper left corner of the box and then the bottom right corner.");
-		System.out.println(isMouseSettingBounds);
+		try {
+			isMouseSettingBounds = true;
+			JOptionPane.showMessageDialog(null,
+					"Please click the upper left corner of the box and then the bottom right corner.");
+			System.out.println(isMouseSettingBounds);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Please load video");
+
+		}
+		
 
 	}
 
