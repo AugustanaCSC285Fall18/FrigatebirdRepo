@@ -39,7 +39,7 @@
                   <FlowPane prefHeight="200.0" prefWidth="200.0">
                      <children>
                         <Button fx:id="setPointBtn" mnemonicParsing="false" onAction="#handleSetPointBtn" prefHeight="102.0" prefWidth="200.0" text="Set Point" />
-                        <Button fx:id="undoBtn" mnemonicParsing="false" prefHeight="98.0" prefWidth="200.0" text="Undo Point" />
+                        <Button fx:id="undoBtn" mnemonicParsing="false" onAction="#undoPoint" prefHeight="98.0" prefWidth="200.0" text="Undo Point" />
                         <ComboBox fx:id="chickChooser" prefWidth="150.0" />
                      </children>
                   </FlowPane>

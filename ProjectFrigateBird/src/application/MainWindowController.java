@@ -70,8 +70,7 @@ public class MainWindowController implements AutoTrackListener {
 	private Button videoSelectBtn;
 	@FXML
 	private Button addChickBtn;
-	@FXML
-	private Button playBtn;
+
 	@FXML
 	private Button trackingBtn;
 	@FXML
@@ -234,31 +233,6 @@ public class MainWindowController implements AutoTrackListener {
 		});
 
 	}
-
-	@FXML
-	public void playVideo() {
-		// TODO make the button work or maybe remove?
-		Video video = project.getVideo();
-		video.setCurrentFrameNum(video.getCurrentFrameNum() + 1);
-
-		Runnable frameGrabber = new Runnable() {
-			@Override
-			public void run() {
-				// Platform.runLater(() -> vidSlider.setValue(vidSlider.getValue() + 1));
-
-				showFrameAt(project.getVideo().getCurrentFrameNum());
-				vidSlider.setValue(project.getVideo().getCurrentFrameNum());
-			}
-		};
-
-		this.timer = Executors.newSingleThreadScheduledExecutor();
-		this.timer.scheduleAtFixedRate(frameGrabber, 0, 33, TimeUnit.MILLISECONDS);
-
-		playBtn.setText("Stop");
-
-	}
-
-
 
 	@SuppressWarnings("unchecked")
 	@FXML
