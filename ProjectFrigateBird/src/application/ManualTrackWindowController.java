@@ -100,13 +100,22 @@ public class ManualTrackWindowController {
 				double unscaledX = event.getX() / scalingRatio;
 				double unscaledY = event.getY() / scalingRatio;
 				selectedTrack.setTimePointAtTime(unscaledX, unscaledY, curFrameNum);
-				autoJumpForward();
+				
 			} else {
 				new Alert(AlertType.WARNING, "You must ADD a chick first!").showAndWait();
 			}
 
 //			settingPoint = false;
-			
+//			boolean allPoints = true;
+//			for(int i =0; i < project.getTracks().size();i++) {
+//				if(project.getTracks().get(i).getTimePointAtTime(video.getCurrentFrameNum()) == null) {
+//					allPoints = false;
+//				}
+//			}
+//			
+//			if(allPoints) {
+				autoJumpForward();
+//			}
 			System.out.println(project.getTracks().toString());
 
 		}
@@ -165,11 +174,11 @@ public class ManualTrackWindowController {
 
 
 	public void undoPoint() {
-
+		//TODO:
 	}
 
 	public ComboBox getChickChooser() {
-		// TODO Auto-generated method stub
+		
 		return chickChooser;
 	}
 	
@@ -187,10 +196,10 @@ public class ManualTrackWindowController {
 			
 			GraphicsContext g = canvas.getGraphicsContext2D();
 
+			g.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+			drawAssignedAnimalTracks(g, setImageScalingRatio(), frameNum);
+			drawUnassignedSegments(g, setImageScalingRatio(), frameNum);
 			
-//			drawAssignedAnimalTracks(g, setImageScalingRatio(), frameNum);
-//			drawUnassignedSegments(g, setImageScalingRatio(), frameNum);
-//			
 			
 			Platform.runLater(() -> {
 				videoView.setImage(curFrame);
