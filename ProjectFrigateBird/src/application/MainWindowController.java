@@ -84,6 +84,9 @@ public class MainWindowController implements AutoTrackListener {
 	private Button manualtrackBtn;
 	@FXML
 	private ComboBox<String> chickChooser;
+	
+	@FXML
+	private ComboBox<String> chickChooserAnalysis;
 
 	private Button setBlankFrameBtn;
 
@@ -378,12 +381,15 @@ public class MainWindowController implements AutoTrackListener {
 			project.getTracks().add(chickToAdd);
 			chickChooser.getItems().add(chickName);
 			chickChooser.getSelectionModel().select(chickName);
+			chickChooserAnalysis.getItems().add(chickName);
+			chickChooserAnalysis.getSelectionModel().select(chickName);
 		}		
 	}
 	
 	public void handleDeleteChickBtn() {
 		project.getTracks().remove(chickChooser.getSelectionModel().getSelectedIndex());
 		chickChooser.getItems().remove(chickChooser.getSelectionModel().getSelectedIndex());
+		chickChooserAnalysis.getItems().remove(chickChooserAnalysis.getSelectionModel().getSelectedIndex());
 	}
 
 }
