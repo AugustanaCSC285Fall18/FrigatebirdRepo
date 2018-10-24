@@ -175,6 +175,7 @@ public class ManualTrackWindowController {
 		//TODO:
 		moveVideoForwardByAmount(-10);
 		
+		
 	}
 
 	public ComboBox getChickChooser() {
