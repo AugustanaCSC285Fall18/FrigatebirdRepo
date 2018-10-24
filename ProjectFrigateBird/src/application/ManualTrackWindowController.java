@@ -131,7 +131,7 @@ public class ManualTrackWindowController {
 	}
 
 	private void autoJumpForward() {		
-		moveVideoForwardByAmount(20);
+		moveVideoForwardByAmount(10);
 	}
 
 	private void moveForwardOrBackByUserAmount(boolean forward) {
