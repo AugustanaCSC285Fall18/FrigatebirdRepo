@@ -16,7 +16,7 @@ class ProjectDataTest {
 	}
 	
 	ProjectData makeFakeData() throws FileNotFoundException {
-		ProjectData project = new ProjectData("testVideos/CircleTest1_no_overlap.mp4");
+		ProjectData project = new ProjectData("H://CSC285/testVideos/CircleTest1_no_overlap.mp4");
 		AnimalTrack track1 = new AnimalTrack("chicken1");
 		AnimalTrack track2 = new AnimalTrack("chicken2");
 		project.getTracks().add(track1);
@@ -32,7 +32,7 @@ class ProjectDataTest {
 	@Test
 	void test() throws FileNotFoundException {
 		ProjectData fake = makeFakeData();
-		assertEquals("testVideos/CircleTest1_no_overlap.mp4", fake.getVideo());
+		assertEquals("H://CSC285/testVideos/CircleTest1_no_overlap.mp4", fake.getVideo());
 	}
 
 }

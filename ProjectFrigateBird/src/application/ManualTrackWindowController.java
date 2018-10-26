@@ -37,7 +37,7 @@ public class ManualTrackWindowController {
 	private TextField frameJumpTextField;
 	@FXML
 	private Canvas canvas;
-	@FXML 
+	@FXML
 	private ComboBox<String> chickChooser;
 	@FXML
 	private Slider vidSlider;
@@ -46,12 +46,10 @@ public class ManualTrackWindowController {
 
 	private ProjectData project;
 	private Video video;
-	
+
 	public static final Color[] TRACK_COLORS = new Color[] { Color.RED, Color.BLUE, Color.GREEN, Color.CYAN,
 			Color.MAGENTA, Color.BLUEVIOLET, Color.ORANGE };
-	
 
-	
 	@FXML
 	public void initializeWithStage(Stage stage) {
 
@@ -59,24 +57,21 @@ public class ManualTrackWindowController {
 		vidSlider.setMax(video.getTotalNumFrames() - 1);
 
 	}
+
 	public void setProject(ProjectData project) {
-		
+
 		this.project = project;
 		video = this.project.getVideo();
 		video.setCurrentFrameNum(video.getCurrentFrameNum());
-		
+
 		Image curFrame = UtilsForOpenCV.matToJavaFXImage(video.readFrame());
-		//System.out.println(curFrame);
-		
-	
-		
+		// System.out.println(curFrame);
+
 		Platform.runLater(() -> {
-		videoView.setImage(curFrame);
+			videoView.setImage(curFrame);
 		});
-		//put in code to show the first video frame in the video view
+		// put in code to show the first video frame in the video view
 	}
-	
-	
 
 	@FXML
 	public void addPointForChick(MouseEvent event) {
@@ -88,7 +83,6 @@ public class ManualTrackWindowController {
 			g.setFill(Color.BLUE);
 			g.fillRoundRect(x, y, 10, 10, 10, 10);
 
-			
 			int chickIndex = chickChooser.getSelectionModel().getSelectedIndex();
 			if (chickIndex >= 0) {
 				AnimalTrack selectedTrack = project.getTracks().get(chickIndex);
@@ -98,7 +92,7 @@ public class ManualTrackWindowController {
 				double unscaledX = event.getX() / scalingRatio;
 				double unscaledY = event.getY() / scalingRatio;
 				selectedTrack.setTimePointAtTime(unscaledX, unscaledY, curFrameNum);
-				
+
 			} else {
 				new Alert(AlertType.WARNING, "You must ADD a chick first!").showAndWait();
 			}
@@ -112,102 +106,103 @@ public class ManualTrackWindowController {
 //			}
 //			
 //			if(allPoints) {
-				autoJumpForward();
+			autoJumpForward();
 //			}
 			System.out.println(project.getTracks().toString());
 
 		}
 
-		
 	}
 
 	public void handleSetPointBtn() {
 		settingPoint = true;
 	}
-	
+
+	/**
+	 * Moves the video currentFrame either forward or backward (positive or negative)
+	 * 
+	 * @param framesForward - number of desired frames
+	 */
 	private void moveVideoForwardByAmount(int framesForward) {
-		video.setCurrentFrameNum(video.getCurrentFrameNum()+ framesForward);
-		
+		video.setCurrentFrameNum(video.getCurrentFrameNum() + framesForward);
+
 		Image curFrame = UtilsForOpenCV.matToJavaFXImage(video.readFrame());
-		
+
 		vidSlider.setValue(project.getVideo().getCurrentFrameNum());
-		
+
 		Platform.runLater(() -> {
 			videoView.setImage(curFrame);
 		});
 	}
 
-	private void autoJumpForward() {		
+	private void autoJumpForward() {
 		moveVideoForwardByAmount(10);
 	}
 
 	private void moveForwardOrBackByUserAmount(boolean forward) {
-		
-		try { 
+
+		try {
 			int frameJumpNum = video.convertSecondsToFrameNums(Integer.parseInt(frameJumpTextField.getText()));
-			if (forward ) {
-				moveVideoForwardByAmount(frameJumpNum);				
+			if (forward) {
+				moveVideoForwardByAmount(frameJumpNum); // positive for forward
 			} else {
-				moveVideoForwardByAmount(- frameJumpNum); //negative for backward				
-			}			
+				moveVideoForwardByAmount(-frameJumpNum); // negative for backward
+			}
 		} catch (NumberFormatException ex) {
 			new Alert(AlertType.WARNING, "Please enter the # of seconds to move first.").showAndWait();
 		}
 	}
+
 	@FXML
 	private void moveForwardXSeconds() {
 		moveForwardOrBackByUserAmount(true);
 	}
+
 	@FXML
 	private void moveBackXSeconds() {
 		moveForwardOrBackByUserAmount(false);
 	}
 
-	
 	@FXML
 	public void updateFrameJumpButtons() {
 		backXFramesBtn.setText("Move Back " + frameJumpTextField.getText() + " Seconds");
 		forwardXFramesBtn.setText("Move Forward " + frameJumpTextField.getText() + " Seconds");
 	}
 
-
 	public void undoPoint() {
-		//TODO:
+		// TODO:
 		moveVideoForwardByAmount(-10);
-		
-		
+
 	}
 
 	public ComboBox getChickChooser() {
-		
+
 		return chickChooser;
 	}
-	
+
 	public double setImageScalingRatio() {
 		double widthRatio = canvas.getWidth() / project.getVideo().getFrameWidth();
 		double heightRatio = canvas.getHeight() / project.getVideo().getFrameHeight();
 		return Math.min(widthRatio, heightRatio);
 	}
-	
+
 	public void showFrameAt(int frameNum) {
 
+		project.getVideo().setCurrentFrameNum(frameNum);
+		Image curFrame = UtilsForOpenCV.matToJavaFXImage(project.getVideo().readFrame());
 
-			project.getVideo().setCurrentFrameNum(frameNum);
-			Image curFrame = UtilsForOpenCV.matToJavaFXImage(project.getVideo().readFrame());
-			
-			GraphicsContext g = canvas.getGraphicsContext2D();
+		GraphicsContext g = canvas.getGraphicsContext2D();
 
-			g.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-			drawAssignedAnimalTracks(g, setImageScalingRatio(), frameNum);
-			drawUnassignedSegments(g, setImageScalingRatio(), frameNum);
-			
-			
-			Platform.runLater(() -> {
-				videoView.setImage(curFrame);
-	
-			});
-		}
-	
+		g.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		drawAssignedAnimalTracks(g, setImageScalingRatio(), frameNum);
+		drawUnassignedSegments(g, setImageScalingRatio(), frameNum);
+
+		Platform.runLater(() -> {
+			videoView.setImage(curFrame);
+
+		});
+	}
+
 	private void drawAssignedAnimalTracks(GraphicsContext g, double scalingRatio, int frameNum) {
 		for (int i = 0; i < project.getTracks().size(); i++) {
 			AnimalTrack track = project.getTracks().get(i);
@@ -227,7 +222,7 @@ public class ManualTrackWindowController {
 			}
 		}
 	}
-	
+
 	private void drawUnassignedSegments(GraphicsContext g, double scalingRatio, int frameNum) {
 		for (AnimalTrack segment : project.getUnassignedSegments()) {
 
@@ -243,5 +238,4 @@ public class ManualTrackWindowController {
 			}
 		}
 	}
-	}
-	
+}

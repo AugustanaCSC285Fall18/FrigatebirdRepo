@@ -24,12 +24,6 @@ import datamodel.AnimalTrack;
 import datamodel.ProjectData;
 import datamodel.TimePoint;
 import datamodel.Video;
-//import autotracking.AutoTrackListener;
-//import autotracking.AutoTracker;
-//import datamodel.AnimalTrack;
-//import datamodel.ProjectData;
-//import datamodel.TimePoint;
-//import datamodel.Video;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -62,7 +56,6 @@ import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import utils.UtilsForOpenCV;
 
-//import utils.UtilsForOpenCV;
 public class MainWindowController implements AutoTrackListener {
 	@FXML
 	private ImageView videoView;
@@ -70,7 +63,6 @@ public class MainWindowController implements AutoTrackListener {
 	private Button videoSelectBtn;
 	@FXML
 	private Button addChickBtn;
-
 	@FXML
 	private Button trackingBtn;
 	@FXML
@@ -83,12 +75,10 @@ public class MainWindowController implements AutoTrackListener {
 	private Button manualtrackBtn;
 	@FXML
 	private ComboBox<String> chickChooser;
-	
 	@FXML
 	private ComboBox<String> chickChooserAnalysis;
-
+	@FXML
 	private Button setBlankFrameBtn;
-
 	@FXML
 	private Slider vidSlider;
 	@FXML
@@ -108,7 +98,6 @@ public class MainWindowController implements AutoTrackListener {
 	private AutoTracker autotracker;
 	private Stage stage;
 
-
 	private boolean isMouseSettingOrigin = false;
 	private boolean isMouseSettingBounds = false;
 	private Point topLeftPointForBounds = null;
@@ -122,7 +111,6 @@ public class MainWindowController implements AutoTrackListener {
 	
 	@FXML
 	public void handleBrowse() {
-		// System.out.println("BROWSERING");
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open Image File");
 		Window mainWindow = videoView.getScene().getWindow();
@@ -134,7 +122,6 @@ public class MainWindowController implements AutoTrackListener {
 	}
 
 	@FXML
-	
 	public void loadVideo(String filePath) {
 		try {
 			project = new ProjectData(filePath);
@@ -258,22 +245,14 @@ public class MainWindowController implements AutoTrackListener {
 				controller.getChickChooser().getItems().add(chickChooser.getItems().get(i));
 				controller.getChickChooser().getSelectionModel().select(0);
 			}
-			
-			
 			controller.initializeWithStage(stage);
 
 			stage.show();
 
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Please load video");
-		} finally {
-
 		}
 	}
-
-	// Calibration
-	// not sure where to call the methods with mouseEvents in the parameters
-	// separate clicks or mouse drag for calibration?
 
 	@FXML
 	public void handleSetOrigin() {
@@ -282,24 +261,10 @@ public class MainWindowController implements AutoTrackListener {
 			System.out.println("origin button clicked");
 		}catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Please load video");
-
 		}
 	}
 
-//	//2 parameters? error comes up when I try though
-//	@FXML
-//	public void originCalibration(MouseEvent event) {
-//		
-//		if(originBtnClicked) {
-//			double x = event.getX();
-//			double y = event.getY();
-//			
-//			TimePoint origin = new TimePoint(x, y, 0);
-//		}
-//	}
-
 	@FXML
-
 	public void handleSetBounds() {
 		try {
 			isMouseSettingBounds = true;
@@ -309,21 +274,21 @@ public class MainWindowController implements AutoTrackListener {
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Please load video");
 
-		}
-		
+		}		
 
 	}
 
 	@SuppressWarnings("unused")
-	// parameter or no?
 	@FXML
 	public void handleCanvasClicked(MouseEvent event) {
 		int x = (int) event.getX();
 		int y = (int) event.getY();
 		if (isMouseSettingBounds) {
 			handleCanvasClickedSettingBounds(x, y);
+			
 		} else if (isMouseSettingOrigin) {
 			handleCanvasClickedSettingOrigin(x, y);
+			
 		}
 		
 	}
