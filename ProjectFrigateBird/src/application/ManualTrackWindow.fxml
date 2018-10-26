@@ -52,7 +52,8 @@
                   <StackPane prefHeight="150.0" prefWidth="200.0">
                      <children>
                         <ImageView fx:id="videoView" fitHeight="429.0" fitWidth="643.0" pickOnBounds="true" preserveRatio="true" />
-                        <Canvas fx:id="canvas" height="431.0" onMouseClicked="#addPointForChick" width="643.0" />
+                        <Canvas fx:id="videoCanvas" height="431.0" width="643.0" />
+                        <Canvas fx:id="overlayCanvas" height="431.0" onMouseClicked="#addPointForChick" width="643.0" />
                      </children>
                   </StackPane>
                   <Slider fx:id="vidSlider" />

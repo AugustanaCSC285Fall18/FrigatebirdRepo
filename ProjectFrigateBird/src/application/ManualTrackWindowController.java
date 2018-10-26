@@ -23,8 +23,8 @@ import utils.UtilsForOpenCV;
 import javafx.scene.canvas.*;
 
 public class ManualTrackWindowController {
-	@FXML
-	private ImageView videoView;
+//	@FXML
+//	private ImageView videoView;
 	@FXML
 	private Button setPointBtn;
 	@FXML
@@ -36,7 +36,9 @@ public class ManualTrackWindowController {
 	@FXML
 	private TextField frameJumpTextField;
 	@FXML
-	private Canvas canvas;
+	private Canvas overlayCanvas;
+	@FXML
+	private Canvas videoCanvas;
 	@FXML
 	private ComboBox<String> chickChooser;
 	@FXML
@@ -52,25 +54,16 @@ public class ManualTrackWindowController {
 
 	@FXML
 	public void initializeWithStage(Stage stage) {
-
 		vidSlider.valueProperty().addListener((obs, oldV, newV) -> showFrameAt(newV.intValue()));
 		vidSlider.setMax(video.getTotalNumFrames() - 1);
-
+		vidSlider.setValue(video.getStartFrameNum());
+		showFrameAt(video.getStartFrameNum()); // in case the slider didn't *change* value from the previous line
 	}
 
 	public void setProject(ProjectData project) {
 
 		this.project = project;
 		video = this.project.getVideo();
-		video.setCurrentFrameNum(video.getCurrentFrameNum());
-
-		Image curFrame = UtilsForOpenCV.matToJavaFXImage(video.readFrame());
-		// System.out.println(curFrame);
-
-		Platform.runLater(() -> {
-			videoView.setImage(curFrame);
-		});
-		// put in code to show the first video frame in the video view
 	}
 
 	@FXML
@@ -79,7 +72,7 @@ public class ManualTrackWindowController {
 		if (settingPoint) {
 			double x = event.getX();
 			double y = event.getY();
-			GraphicsContext g = canvas.getGraphicsContext2D();
+			GraphicsContext g = overlayCanvas.getGraphicsContext2D();
 			g.setFill(Color.BLUE);
 			g.fillRoundRect(x, y, 10, 10, 10, 10);
 
@@ -88,7 +81,7 @@ public class ManualTrackWindowController {
 				AnimalTrack selectedTrack = project.getTracks().get(chickIndex);
 				int curFrameNum = (int) vidSlider.getValue();
 
-				double scalingRatio = setImageScalingRatio();
+				double scalingRatio = getImageScalingRatio();
 				double unscaledX = event.getX() / scalingRatio;
 				double unscaledY = event.getY() / scalingRatio;
 
@@ -98,8 +91,12 @@ public class ManualTrackWindowController {
 				} else {
 					selectedTrack.setTimePointAtTime(unscaledX, unscaledY, curFrameNum);
 				}
-				if(project.getNearestUnassignedSegment(x, y, curFrameNum, curFrameNum+50) != null) {
-					selectedTrack.addSegment(project.getNearestUnassignedSegment(x, y, curFrameNum, curFrameNum+50));
+				AnimalTrack closestSegment = project.getNearestUnassignedSegmentWithinDist(x, y, curFrameNum, curFrameNum+50, 25);
+				System.out.println("Unassigned: " + project.getUnassignedSegments());
+				System.out.println("Closest: " + closestSegment);
+				if(closestSegment != null) {
+					selectedTrack.addSegment(closestSegment);
+					project.getUnassignedSegments().remove(closestSegment);
 				}
 				
 
@@ -130,15 +127,15 @@ public class ManualTrackWindowController {
 	 * @param framesForward - number of desired frames
 	 */
 	private void moveVideoForwardByAmount(int framesForward) {
-		video.setCurrentFrameNum(video.getCurrentFrameNum() + framesForward);
+//		video.setCurrentFrameNum(video.getCurrentFrameNum() + framesForward);
+//
+//		Image curFrame = UtilsForOpenCV.matToJavaFXImage(video.readFrame());
 
-		Image curFrame = UtilsForOpenCV.matToJavaFXImage(video.readFrame());
+		vidSlider.setValue(project.getVideo().getCurrentFrameNum() + framesForward);
 
-		vidSlider.setValue(project.getVideo().getCurrentFrameNum());
-
-		Platform.runLater(() -> {
-			videoView.setImage(curFrame);
-		});
+//		Platform.runLater(() -> {
+//			videoView.setImage(curFrame);			
+//		});
 	}
 
 	private void autoJumpForward() {
@@ -192,9 +189,9 @@ public class ManualTrackWindowController {
 		return chickChooser;
 	}
 
-	public double setImageScalingRatio() {
-		double widthRatio = canvas.getWidth() / project.getVideo().getFrameWidth();
-		double heightRatio = canvas.getHeight() / project.getVideo().getFrameHeight();
+	public double getImageScalingRatio() {
+		double widthRatio = overlayCanvas.getWidth() / project.getVideo().getFrameWidth();
+		double heightRatio = overlayCanvas.getHeight() / project.getVideo().getFrameHeight();
 		return Math.min(widthRatio, heightRatio);
 	}
 
@@ -203,16 +200,16 @@ public class ManualTrackWindowController {
 		project.getVideo().setCurrentFrameNum(frameNum);
 		Image curFrame = UtilsForOpenCV.matToJavaFXImage(project.getVideo().readFrame());
 
-		GraphicsContext g = canvas.getGraphicsContext2D();
+		GraphicsContext g = overlayCanvas.getGraphicsContext2D();
 
-		g.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		drawAssignedAnimalTracks(g, setImageScalingRatio(), frameNum);
-		drawUnassignedSegments(g, setImageScalingRatio(), frameNum);
+		g.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
+		double scalingRatio = getImageScalingRatio();
+		drawAssignedAnimalTracks(g, scalingRatio, frameNum);
+		drawUnassignedSegments(g, scalingRatio, frameNum);
 
-		Platform.runLater(() -> {
-			videoView.setImage(curFrame);
-
-		});
+		double width = project.getVideo().getFrameWidth() * scalingRatio;
+		double height = project.getVideo().getFrameHeight() * scalingRatio;
+		videoCanvas.getGraphicsContext2D().drawImage(curFrame, 0, 0, width, height);
 	}
 
 	private void drawAssignedAnimalTracks(GraphicsContext g, double scalingRatio, int frameNum) {

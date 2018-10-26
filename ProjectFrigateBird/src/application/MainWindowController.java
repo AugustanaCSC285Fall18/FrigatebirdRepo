@@ -57,8 +57,8 @@ import javafx.stage.Window;
 import utils.UtilsForOpenCV;
 
 public class MainWindowController implements AutoTrackListener {
-	@FXML
-	private ImageView videoView;
+//	@FXML
+//	private ImageView videoView;
 	@FXML
 	private Button videoSelectBtn;
 	@FXML
@@ -90,7 +90,9 @@ public class MainWindowController implements AutoTrackListener {
 	@FXML
 	private TextField timeText;
 	@FXML
-	private Canvas canvas;
+	private Canvas overlayCanvas;
+	@FXML
+	private Canvas videoCanvas;
 
 	private ScheduledExecutorService timer;
 
@@ -112,9 +114,8 @@ public class MainWindowController implements AutoTrackListener {
 	@FXML
 	public void handleBrowse() {
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Open Image File");
-		Window mainWindow = videoView.getScene().getWindow();
-		File chosenFile = fileChooser.showOpenDialog(mainWindow);
+		fileChooser.setTitle("Open Video File");
+		File chosenFile = fileChooser.showOpenDialog(stage);
 		if (chosenFile != null) {
 			loadVideo(chosenFile.getPath());
 		}
@@ -155,7 +156,11 @@ public class MainWindowController implements AutoTrackListener {
 			int seconds = (int) (timeInSeconds % 60);
 
 			Platform.runLater(() -> {
-				videoView.setImage(curFrame);
+				GraphicsContext g  = videoCanvas.getGraphicsContext2D();
+				double width = project.getVideo().getFrameWidth();
+				double height = project.getVideo().getFrameHeight();
+				double scalingRatio = getImageScalingRatio();
+				g.drawImage(curFrame, 0, 0, width * scalingRatio, height * scalingRatio);
 				currentFrameText.setText(String.format("%05d", frameNum));
 				if (seconds < 10) {
 					timeText.setText(minutes + ":0" + seconds);
@@ -201,7 +206,7 @@ public class MainWindowController implements AutoTrackListener {
 		// this method is being run by the AutoTracker's thread, so we must
 		// ask the JavaFX UI thread to update some visual properties
 		Platform.runLater(() -> {
-			videoView.setImage(imgFrame);
+			showFrameAt(frameNumber);
 			vidSlider.setValue(frameNumber);
 		});
 	}
@@ -275,6 +280,7 @@ public class MainWindowController implements AutoTrackListener {
 			JOptionPane.showMessageDialog(null, "Please load video");
 
 		}		
+		
 
 	}
 
@@ -283,6 +289,8 @@ public class MainWindowController implements AutoTrackListener {
 	public void handleCanvasClicked(MouseEvent event) {
 		int x = (int) event.getX();
 		int y = (int) event.getY();
+		System.out.println("x: " + x + " y: "+ y);
+
 		if (isMouseSettingBounds) {
 			handleCanvasClickedSettingBounds(x, y);
 
@@ -309,15 +317,18 @@ public class MainWindowController implements AutoTrackListener {
 			int width = (int) Math.abs(topLeftPointForBounds.getX() - bottomRightPoint.getX());
 			int height = (int) Math.abs(topLeftPointForBounds.getY() - bottomRightPoint.getY());
 
-			Rectangle bounds = new Rectangle((int) topLeftPointForBounds.getX(), (int) topLeftPointForBounds.getY(),
-					width, height);
+			Rectangle bounds = new Rectangle((int) (topLeftPointForBounds.getX()*getImageScalingRatio()), (int) (topLeftPointForBounds.getY()*getImageScalingRatio()),
+					(int) (width*getImageScalingRatio()), (int) (height*getImageScalingRatio()));
+
 			project.getVideo().setArenaBounds(bounds);
 		}
 
 	}
 
 	public void handleCanvasClickedSettingOrigin(int x, int y) {
-		Point point = new Point(x, y);
+		int scaledX = (int) (x/getImageScalingRatio());
+		int scaledY = (int) (y/getImageScalingRatio());
+		Point point = new Point(scaledX, scaledY);
 		project.getVideo().setOriginPoint(point);
 	}
 
@@ -351,6 +362,12 @@ public class MainWindowController implements AutoTrackListener {
 		project.getTracks().remove(chickChooser.getSelectionModel().getSelectedIndex());
 		chickChooser.getItems().remove(chickChooser.getSelectionModel().getSelectedIndex());
 		chickChooserAnalysis.getItems().remove(chickChooserAnalysis.getSelectionModel().getSelectedIndex());
+	}
+	
+	public double getImageScalingRatio() {
+		double widthRatio = overlayCanvas.getWidth() / project.getVideo().getFrameWidth();
+		double heightRatio = overlayCanvas.getHeight() / project.getVideo().getFrameHeight();
+		return Math.min(widthRatio, heightRatio);
 	}
 
 }

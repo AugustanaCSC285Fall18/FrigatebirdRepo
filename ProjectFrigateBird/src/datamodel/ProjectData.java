@@ -62,8 +62,8 @@ public class ProjectData {
 	
 	
 
-	public AnimalTrack getNearestUnassignedSegment(double x, double y, int startFrame, int endFrame) {
-		double minDistance = 50.0;
+	public AnimalTrack getNearestUnassignedSegmentWithinDist(double x, double y, int startFrame, int endFrame, double distanceRange) {		
+		double minDistance = distanceRange;
 		AnimalTrack nearest = null;
 		for (AnimalTrack segment : unassignedSegments) {
 			List<TimePoint> ptsInInterval = segment.getTimePointsWithinInterval(startFrame, endFrame);
