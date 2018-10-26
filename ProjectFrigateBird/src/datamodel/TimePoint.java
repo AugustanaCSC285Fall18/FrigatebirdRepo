@@ -69,5 +69,7 @@ public class TimePoint implements Comparable<TimePoint> {
 	public int compareTo(TimePoint other) {		
 		return this.getTimeDiffAfter(other);
 	}
+
+	
 }
 

@@ -89,4 +89,14 @@ public class AnimalTrack {
 		}
 		return pointsInInterval;
 	}
+	
+	public List<TimePoint> getPositions(){
+		return positions;
+	}
+	
+	public void addSegment(AnimalTrack addingTrack) {
+		for(int i = 0; i < addingTrack.getPositions().size();i++) {
+			positions.add(addingTrack.getTimePointAtIndex(i));
+		}
+	}
 }

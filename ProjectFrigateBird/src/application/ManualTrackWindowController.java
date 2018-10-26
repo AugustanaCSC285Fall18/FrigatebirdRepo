@@ -97,23 +97,22 @@ public class ManualTrackWindowController {
 				double scalingRatio = setImageScalingRatio();
 				double unscaledX = event.getX() / scalingRatio;
 				double unscaledY = event.getY() / scalingRatio;
-				selectedTrack.setTimePointAtTime(unscaledX, unscaledY, curFrameNum);
+				if(selectedTrack.getTimePointAtTime(video.getCurrentFrameNum()) == null) {
+					TimePoint addingPoint = new TimePoint(unscaledX, unscaledY, curFrameNum);
+					selectedTrack.add(addingPoint);
+				} else {
+					selectedTrack.setTimePointAtTime(unscaledX, unscaledY, curFrameNum);
+				}
+				if(project.getNearestUnassignedSegment(x, y, curFrameNum, curFrameNum+50) != null) {
+					selectedTrack.addSegment(project.getNearestUnassignedSegment(x, y, curFrameNum, curFrameNum+50));
+				}
 				
 			} else {
 				new Alert(AlertType.WARNING, "You must ADD a chick first!").showAndWait();
 			}
-
-//			settingPoint = false;
-//			boolean allPoints = true;
-//			for(int i =0; i < project.getTracks().size();i++) {
-//				if(project.getTracks().get(i).getTimePointAtTime(video.getCurrentFrameNum()) == null) {
-//					allPoints = false;
-//				}
-//			}
-//			
-//			if(allPoints) {
+			
 				autoJumpForward();
-//			}
+				
 			System.out.println(project.getTracks().toString());
 
 		}
@@ -173,7 +172,7 @@ public class ManualTrackWindowController {
 
 	public void undoPoint() {
 		//TODO:
-		moveVideoForwardByAmount(-10);
+		showFrameAt(project.getTracks().get(chickChooser.getSelectionModel().getSelectedIndex()).getFinalTimePoint().getFrameNum());
 		
 		
 	}
@@ -217,13 +216,13 @@ public class ManualTrackWindowController {
 			g.setFill(trackPrevColor);
 			// draw chick's recent trail from the last few seconds
 			for (TimePoint prevPt : track.getTimePointsWithinInterval(frameNum - 90, frameNum)) {
-				g.fillOval(prevPt.getX() * scalingRatio - 3, prevPt.getY() * scalingRatio - 3, 7, 7);
+				g.fillOval(prevPt.getX() * scalingRatio - 1, prevPt.getY() * scalingRatio - 1, 7, 7);
 			}
 			// draw the current point (if any) as a larger dot
 			TimePoint currPt = track.getTimePointAtTime(frameNum);
 			if (currPt != null) {
 				g.setFill(trackColor);
-				g.fillOval(currPt.getX() * scalingRatio - 7, currPt.getY() * scalingRatio - 7, 15, 15);
+				g.fillOval(currPt.getX() * scalingRatio - 5, currPt.getY() * scalingRatio - 5, 15, 15);
 			}
 		}
 	}

@@ -304,8 +304,10 @@ public class MainWindowController implements AutoTrackListener {
 		int y = (int) event.getY();
 		if (isMouseSettingBounds) {
 			handleCanvasClickedSettingBounds(x, y);
+			isMouseSettingBounds = false;
 		} else if (isMouseSettingOrigin) {
 			handleCanvasClickedSettingOrigin(x, y);
+			isMouseSettingOrigin = false;
 		}
 		
 	}
