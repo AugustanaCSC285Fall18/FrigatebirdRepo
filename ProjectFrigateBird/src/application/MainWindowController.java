@@ -74,6 +74,10 @@ public class MainWindowController implements AutoTrackListener {
 	@FXML
 	private Button manualtrackBtn;
 	@FXML
+	private Button instructionsBtn;
+	@FXML
+	private Button aboutBtn;
+	@FXML
 	private ComboBox<String> chickChooser;
 	@FXML
 	private ComboBox<String> chickChooserAnalysis;
@@ -372,6 +376,25 @@ public class MainWindowController implements AutoTrackListener {
 		double widthRatio = overlayCanvas.getWidth() / project.getVideo().getFrameWidth();
 		double heightRatio = overlayCanvas.getHeight() / project.getVideo().getFrameHeight();
 		return Math.min(widthRatio, heightRatio);
+	}
+	
+	public void handleInstructionsBtn() {
+		JOptionPane.showMessageDialog(null,
+				"1. Please select a video from the Select Video button to the left.\n"
+				+ "2. Please select the callibration tab in the drop down tabs to the right and complete each of the Callibration tools."
+				+ "\n\t-Select a blank frame to help with the auto-tracking process by clicking the button when the screen is showing a frame with no chicks."
+				+ "\n\t-Select an origin point point on the screen by clicking the button then selecting a point on the screen to measure distance from."
+				+ "\n\t-Select the chicks' arena by pressing the set bounds button and then clicking the top right corner of the box and then the bottom left corner."
+				+ "\n3. Add your chicks to the program by pressing the add chick button then typing the name of your chicks."
+				+ "\n\t-You can delete a chick from the project by selecting it in the combo box and pressing delete chick."
+				+ "\n4. Enter a start and end frame for your tracking.\n\t-The current frame can be found in the top right corner of the screen."
+				+ "\n\t-Try selecting a start fram after all the chicks have been added and an end frame to stop measuring before they are removed."
+				+ "\n5. Select proceed to manual tracking.\n\t-Begin adding points to each of the chicks until an autoTrack segment is assigned to the chick."
+				+ "\n5. Select the analyze button to save your progress and to get some info about the data in the project.");
+	}
+
+	public void handleAboutBtn() {
+		
 	}
 
 }

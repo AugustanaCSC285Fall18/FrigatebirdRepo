@@ -19,13 +19,6 @@
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="482.0" prefWidth="989.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainWindowController">
    <top>
       <BorderPane prefHeight="48.0" prefWidth="805.0" BorderPane.alignment="CENTER">
-         <left>
-            <Button fx:id="videoSelectBtn" mnemonicParsing="false" onAction="#handleBrowse" text="Select Video" BorderPane.alignment="CENTER">
-               <BorderPane.margin>
-                  <Insets bottom="10.0" left="10.0" />
-               </BorderPane.margin>
-            </Button>
-         </left>
          <right>
             <FlowPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
@@ -45,6 +38,27 @@
                </children>
             </FlowPane>
          </right>
+         <left>
+            <FlowPane prefHeight="55.0" prefWidth="338.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Button fx:id="videoSelectBtn" mnemonicParsing="false" onAction="#handleBrowse" text="Select Video">
+                     <FlowPane.margin>
+                        <Insets left="5.0" top="5.0" />
+                     </FlowPane.margin>
+                  </Button>
+                  <Button fx:id="instructionsBtn" mnemonicParsing="false" onAction="#handleInstructionsBtn" text="Instructions">
+                     <FlowPane.margin>
+                        <Insets left="10.0" top="5.0" />
+                     </FlowPane.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" text="About Team FrigateBird">
+                     <FlowPane.margin>
+                        <Insets left="10.0" top="5.0" />
+                     </FlowPane.margin>
+                  </Button>
+               </children>
+            </FlowPane>
+         </left>
       </BorderPane>
    </top>
    <center>
