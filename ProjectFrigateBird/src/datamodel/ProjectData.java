@@ -59,9 +59,15 @@ public class ProjectData {
 		return data;
 	}
 	
-	
-	
-
+	/**
+	 * 
+	 * @param x - x coordinate of the new TimePoint
+	 * @param y - y coordinate of the new TimePoint
+	 * @param startFrame - beginning of window to look for nearest segment
+	 * @param endFrame - beginning of window to look for nearest segment
+	 * @param distanceRange - minimum distance away from the point
+	 * @return
+	 */
 	public AnimalTrack getNearestUnassignedSegmentWithinDist(double x, double y, int startFrame, int endFrame, double distanceRange) {		
 		double minDistance = distanceRange;
 		AnimalTrack nearest = null;

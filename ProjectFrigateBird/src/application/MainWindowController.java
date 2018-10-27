@@ -127,6 +127,10 @@ public class MainWindowController implements AutoTrackListener {
 	}
 
 	@FXML
+	/**
+	 * 
+	 * @param filePath - location where the video is located
+	 */
 	public void loadVideo(String filePath) {
 		try {
 			project = new ProjectData(filePath);
@@ -142,6 +146,10 @@ public class MainWindowController implements AutoTrackListener {
 		}
 	}
 
+	/**
+	 * 
+	 * @param frameNum - desired frame to show
+	 */
 	public void showFrameAt(int frameNum) {
 //		if (timer != null && !timer.isShutdown()) {
 //			timer.shutdown();
@@ -202,9 +210,11 @@ public class MainWindowController implements AutoTrackListener {
 
 	}
 
-	// this method will get called repeatedly by the Autotracker after it analyzes
-	// each frame
 	@Override
+	/**
+	 * this method will get called repeatedly by the Autotracker after it analyzes each frame
+	 * 
+	 */
 	public void handleTrackedFrame(Mat frame, int frameNumber, double fractionComplete) {
 		Image imgFrame = UtilsForOpenCV.matToJavaFXImage(frame);
 		// this method is being run by the AutoTracker's thread, so we must
@@ -294,6 +304,11 @@ public class MainWindowController implements AutoTrackListener {
 
 	@SuppressWarnings("unused")
 	@FXML
+	/**
+	 * Depending on what the user is setting, bounds or origin, the mouse click coordinates 
+	 * are sent to the respective handle method
+	 * @param event - mouse click
+	 */
 	public void handleCanvasClicked(MouseEvent event) {
 		int x = (int) event.getX();
 		int y = (int) event.getY();
@@ -313,6 +328,11 @@ public class MainWindowController implements AutoTrackListener {
 		
 	}
 
+	/**
+	 * 
+	 * @param x - x coordinate of the Point being made for the bounds
+	 * @param y - y coordinate of the Point being made for the bounds
+	 */
 	public void handleCanvasClickedSettingBounds(int x, int y) {
 		if (topLeftPointForBounds == null) {
 			topLeftPointForBounds = new Point(x, y);
@@ -333,6 +353,11 @@ public class MainWindowController implements AutoTrackListener {
 
 	}
 
+	/**
+	 * 
+	 * @param x - x coordinate of the Point being made for the origin
+	 * @param y - y coordinate of the Point being made for the bounds
+	 */
 	public void handleCanvasClickedSettingOrigin(int x, int y) {
 		int scaledX = (int) (x/getImageScalingRatio());
 		int scaledY = (int) (y/getImageScalingRatio());
@@ -348,6 +373,9 @@ public class MainWindowController implements AutoTrackListener {
 	}
 	
 	@FXML
+	/**
+	 * Adds a chick (AnimalTrack object) with a name
+	 */
 	public void handleAddChickBtn() {
 		TextInputDialog nameEnter = new TextInputDialog();
 		nameEnter.setTitle("Add Chicks");
@@ -366,12 +394,19 @@ public class MainWindowController implements AutoTrackListener {
 		}		
 	}
 	
+	/**
+	 * Deletes a chick
+	 */
 	public void handleDeleteChickBtn() {
 		project.getTracks().remove(chickChooser.getSelectionModel().getSelectedIndex());
 		chickChooser.getItems().remove(chickChooser.getSelectionModel().getSelectedIndex());
 		chickChooserAnalysis.getItems().remove(chickChooserAnalysis.getSelectionModel().getSelectedIndex());
 	}
 	
+	/**
+	 * 
+	 * @return - image scaling ratio
+	 */
 	public double getImageScalingRatio() {
 		double widthRatio = overlayCanvas.getWidth() / project.getVideo().getFrameWidth();
 		double heightRatio = overlayCanvas.getHeight() / project.getVideo().getFrameHeight();

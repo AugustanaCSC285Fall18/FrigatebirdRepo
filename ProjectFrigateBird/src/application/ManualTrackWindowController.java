@@ -67,6 +67,10 @@ public class ManualTrackWindowController {
 	}
 
 	@FXML
+	/**
+	 * Draws a blue dot where the user clicked and adds the point to the nearest chick
+	 * @param event - mouse click 
+	 */
 	public void addPointForChick(MouseEvent event) {
 
 		if (settingPoint) {
@@ -189,6 +193,10 @@ public class ManualTrackWindowController {
 		return chickChooser;
 	}
 
+	/**
+	 * 
+	 * @return image scaling ratio
+	 */
 	public double getImageScalingRatio() {
 		double widthRatio = overlayCanvas.getWidth() / project.getVideo().getFrameWidth();
 		double heightRatio = overlayCanvas.getHeight() / project.getVideo().getFrameHeight();
@@ -212,6 +220,12 @@ public class ManualTrackWindowController {
 		videoCanvas.getGraphicsContext2D().drawImage(curFrame, 0, 0, width, height);
 	}
 
+	/**
+	 * 
+	 * @param g - Graphics pen used to draw objects on the canvas
+	 * @param scalingRatio - scaling ratio
+	 * @param frameNum - current frame number
+	 */
 	private void drawAssignedAnimalTracks(GraphicsContext g, double scalingRatio, int frameNum) {
 		for (int i = 0; i < project.getTracks().size(); i++) {
 			AnimalTrack track = project.getTracks().get(i);
@@ -232,6 +246,12 @@ public class ManualTrackWindowController {
 		}
 	}
 
+	/**
+	 * 
+	 * @param g - Graphics pen used to draw objects on the canvas
+	 * @param scalingRatio - scaling ratio
+	 * @param frameNum - current frame number
+	 */
 	private void drawUnassignedSegments(GraphicsContext g, double scalingRatio, int frameNum) {
 		for (AnimalTrack segment : project.getUnassignedSegments()) {
 
