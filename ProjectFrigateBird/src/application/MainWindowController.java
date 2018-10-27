@@ -206,7 +206,11 @@ public class MainWindowController implements AutoTrackListener {
 		// this method is being run by the AutoTracker's thread, so we must
 		// ask the JavaFX UI thread to update some visual properties
 		Platform.runLater(() -> {
-			showFrameAt(frameNumber);
+				GraphicsContext g = videoCanvas.getGraphicsContext2D();
+				g.clearRect(0, 0, videoCanvas.getWidth(), videoCanvas.getHeight());
+				double scalingRatio = getImageScalingRatio();
+				g.drawImage(imgFrame, 0, 0, imgFrame.getWidth() * scalingRatio, imgFrame.getHeight() * scalingRatio);
+
 			vidSlider.setValue(frameNumber);
 		});
 	}
