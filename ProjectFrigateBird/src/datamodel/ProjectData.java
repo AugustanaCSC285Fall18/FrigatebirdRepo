@@ -43,7 +43,7 @@ public class ProjectData {
 	}
 	
 	public String toJSON() {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();		
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		return gson.toJson(this);
 	}
 	
@@ -58,6 +58,7 @@ public class ProjectData {
 		data.getVideo().connectVideoCapture();
 		return data;
 	}
+	
 	
 	/**
 	 * 

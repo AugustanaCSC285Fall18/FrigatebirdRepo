@@ -18,6 +18,8 @@ import javax.swing.JOptionPane;
 import org.opencv.core.Mat;
 import org.opencv.videoio.Videoio;
 
+import com.google.gson.Gson;
+
 import autotracking.AutoTrackListener;
 import autotracking.AutoTracker;
 import datamodel.AnimalTrack;
@@ -77,6 +79,10 @@ public class MainWindowController implements AutoTrackListener {
 	private Button instructionsBtn;
 	@FXML
 	private Button aboutBtn;
+	@FXML
+	private Button loadBtn;
+	@FXML
+	private Button saveBtn;
 	@FXML
 	private ComboBox<String> chickChooser;
 	@FXML
@@ -413,6 +419,7 @@ public class MainWindowController implements AutoTrackListener {
 		return Math.min(widthRatio, heightRatio);
 	}
 	
+	@FXML
 	public void handleInstructionsBtn() {
 		JOptionPane.showMessageDialog(null,
 				"1. Please select a video from the Select Video button to the left.\n"
@@ -427,9 +434,30 @@ public class MainWindowController implements AutoTrackListener {
 				+ "\n5. Select proceed to manual tracking.\n\t-Begin adding points to each of the chicks until an autoTrack segment is assigned to the chick."
 				+ "\n5. Select the analyze button to save your progress and to get some info about the data in the project.");
 	}
-
+	
+	@FXML
 	public void handleAboutBtn() {
+		JOptionPane.showMessageDialog(null,
+				"Creators: Chase Fahy, Jason Palmer & Connor McGing\n"
+				+ "Project Supervisor: Forrest Stonedahl\n"
+				+ "CSC285 Software Development - Augustana College");
+	}
+	
+	@FXML
+	public void handleSaveBtn() throws FileNotFoundException {
+		File file = new File("H:\\newfile.txt");
+		project.saveToFile(file);
+	}
+	
+	@FXML
+	public void handleLoadBtn() throws FileNotFoundException {
 		
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Open Video File");
+		File chosenFile = fileChooser.showOpenDialog(stage);
+		if (chosenFile != null) {
+			project.loadFromFile(chosenFile);
+		}
 	}
 
 }

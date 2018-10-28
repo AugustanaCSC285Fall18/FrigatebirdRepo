@@ -39,11 +39,21 @@
             </FlowPane>
          </right>
          <left>
-            <FlowPane prefHeight="55.0" prefWidth="338.0" BorderPane.alignment="CENTER">
+            <FlowPane prefHeight="60.0" prefWidth="469.0" BorderPane.alignment="CENTER">
                <children>
                   <Button fx:id="videoSelectBtn" mnemonicParsing="false" onAction="#handleBrowse" text="Select Video">
                      <FlowPane.margin>
                         <Insets left="5.0" top="5.0" />
+                     </FlowPane.margin>
+                  </Button>
+                  <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#handleSaveBtn" text="Save">
+                     <FlowPane.margin>
+                        <Insets left="10.0" top="5.0" />
+                     </FlowPane.margin>
+                  </Button>
+                  <Button fx:id="loadBtn" mnemonicParsing="false" onAction="#handleLoadBtn" text="Load">
+                     <FlowPane.margin>
+                        <Insets left="10.0" top="5.0" />
                      </FlowPane.margin>
                   </Button>
                   <Button fx:id="instructionsBtn" mnemonicParsing="false" onAction="#handleInstructionsBtn" text="Instructions">
@@ -51,7 +61,7 @@
                         <Insets left="10.0" top="5.0" />
                      </FlowPane.margin>
                   </Button>
-                  <Button mnemonicParsing="false" text="About Team FrigateBird">
+                  <Button fx:id="aboutBtn" mnemonicParsing="false" onAction="#handleAboutBtn" text="About Team FrigateBird">
                      <FlowPane.margin>
                         <Insets left="10.0" top="5.0" />
                      </FlowPane.margin>
