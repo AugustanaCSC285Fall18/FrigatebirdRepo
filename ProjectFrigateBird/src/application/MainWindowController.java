@@ -81,6 +81,8 @@ public class MainWindowController implements AutoTrackListener {
 	private Button aboutBtn;
 	@FXML
 	private Button loadBtn;
+	@FXML
+	private Button pixelsPerCmBtn;
 
 	@FXML
 	private ComboBox<String> chickChooser;
@@ -141,8 +143,8 @@ public class MainWindowController implements AutoTrackListener {
 			project = new ProjectData(filePath);
 			Video video = project.getVideo();
 
-			//video.setXPixelsPerCm(6);
-			//video.setYPixelsPerCm(6);
+			video.setXPixelsPerCm(6);
+			video.setYPixelsPerCm(6);
 
 			vidSlider.setMax(video.getTotalNumFrames() - 1);
 			showFrameAt(0);
@@ -401,7 +403,7 @@ public class MainWindowController implements AutoTrackListener {
 			int distanceOfBoxInCm = Integer.parseInt(result.get());
 			if(textBoxFill.equals("Height")) {
 				project.getVideo().setYPixelsPerCm(pixels/distanceOfBoxInCm);
-			}else if(textBoxFill.equals("Length")){
+			}else if(textBoxFill.equals("Width")){
 				project.getVideo().setXPixelsPerCm(pixels/distanceOfBoxInCm);
 
 			}
@@ -495,6 +497,12 @@ public class MainWindowController implements AutoTrackListener {
 			JOptionPane.showMessageDialog(null, "Please select the .txt file that you saved to.");
 
 		}
+	}
+	
+	@FXML
+	public void handleSetPixelsPerCmBtn() {
+		setPixelsperCm(project.getVideo().getArenaBounds().height, "Height");
+		setPixelsperCm(project.getVideo().getArenaBounds().width, "Width");
 	}
 
 }

@@ -103,7 +103,7 @@ public class ProjectData {
 		}
 
 		for (int i = 0; i < getTracks().size(); i++) {
-			CSVbuilder.append(getTracks().get(i).getID());
+			CSVbuilder.append("Chick: " + getTracks().get(i).getID());
 			CSVbuilder.append(",,,,");
 		}
 
@@ -111,7 +111,7 @@ public class ProjectData {
 
 		
 		for (int i = 0; i < getTracks().size(); i++) {
-			CSVbuilder.append("Time,X-Coordinate (In Cm),Y-Coordinate (In Cm),,");
+			CSVbuilder.append("Time (In Seconds),X-Coordinate (In Cm),Y-Coordinate (In Cm),,");
 		}
 
 		CSVbuilder.append("\n");
@@ -126,14 +126,15 @@ public class ProjectData {
 				if(getTracks().get(a).hasTimePointAtIndex(i)) {
 					//int cmX = video.
 					int seconds = (int) video.convertFrameNumsToSeconds(getTracks().get(a).getTimePointAtIndex(i).getFrameNum());
-					int cmX;
-					int cmY;
+					int XPixelsPerCm = (int) video.getXPixelsPerCm();
+					int YPixelsPerCm = (int) video.getYPixelsPerCm();
 					CSVbuilder.append(seconds + ",");
-					CSVbuilder.append(getTracks().get(a).getTimePointAtIndex(i).getX() + ",");
-					CSVbuilder.append(getTracks().get(a).getTimePointAtIndex(i).getY() + ",");					
+					CSVbuilder.append((getTracks().get(a).getTimePointAtIndex(i).getX()/XPixelsPerCm) + ",");
+					CSVbuilder.append((getTracks().get(a).getTimePointAtIndex(i).getY()/YPixelsPerCm) + ",");					
 				}
+				CSVbuilder.append("\n");
 			}
-			CSVbuilder.append("\n");
+			
 		}
 		//System.out.println(CSVbuilder);
 		try {

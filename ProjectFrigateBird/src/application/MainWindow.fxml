@@ -106,6 +106,7 @@
                         <Button fx:id="originBtn" layoutX="20.0" layoutY="74.0" mnemonicParsing="false" onAction="#handleSetOrigin" text="Click to set origin" />
                         <Button fx:id="boundsBtn" layoutX="20.0" layoutY="109.0" mnemonicParsing="false" onAction="#handleSetBounds" text="Click to Set Bounds" />
                         <Button fx:id="setBlankFrameBtn" layoutX="20.0" layoutY="40.0" mnemonicParsing="false" onAction="#handleSetBlankFrameBtn" text="Set Blank Frame" />
+                        <Button fx:id="pixelsPerCmBtn" layoutX="20.0" layoutY="144.0" mnemonicParsing="false" onAction="#handleSetPixelsPerCmBtn" text="Set Pixels Per Cm" />
                      </children>
                   </AnchorPane>
             </content>
