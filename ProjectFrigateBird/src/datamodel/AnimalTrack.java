@@ -99,4 +99,16 @@ public class AnimalTrack {
 			positions.add(addingTrack.getTimePointAtIndex(i));
 		}
 	}
+	
+	public boolean hasTimePointAtIndex(int index) {
+		if(positions.size() <= index || index < 0) {
+			return false;
+		} else {
+			if(positions.get(index) != null) {
+				return true;
+			}else {
+				return false;
+			}
+		}
+	}
 }

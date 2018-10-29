@@ -3,6 +3,12 @@ package application;
 import datamodel.ProjectData;
 import datamodel.TimePoint;
 import datamodel.Video;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+
+import javax.swing.JOptionPane;
+
 import datamodel.AnimalTrack;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -35,6 +41,8 @@ public class ManualTrackWindowController {
 	private Button backXFramesBtn;
 	@FXML
 	private Button exportBtn;
+	@FXML
+	private Button saveBtn;
 	@FXML
 	private TextField frameJumpTextField;
 	@FXML
@@ -269,6 +277,22 @@ public class ManualTrackWindowController {
 				g.fillRect(currPt.getX() * scalingRatio - 5, currPt.getY() * scalingRatio - 5, 11, 11);
 			}
 		}
+	}
+	
+	@FXML
+	public void handleSaveBtn() throws FileNotFoundException {
+		
+		if(project == null) {
+			JOptionPane.showMessageDialog(null, "Saving is only available after you have created a project by selecting a video!");
+		} else {
+			File file = new File("H:\\newfile.txt");
+			File CSVfile = new File("H:\\newfile.csv");
+			project.saveToFile(file);
+			project.exportToCSV(CSVfile);
+			JOptionPane.showMessageDialog(null, "Save Successful!");
+
+		}
+		
 	}
 	
 	@FXML

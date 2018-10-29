@@ -81,8 +81,7 @@ public class MainWindowController implements AutoTrackListener {
 	private Button aboutBtn;
 	@FXML
 	private Button loadBtn;
-	@FXML
-	private Button saveBtn;
+
 	@FXML
 	private ComboBox<String> chickChooser;
 	@FXML
@@ -466,20 +465,7 @@ public class MainWindowController implements AutoTrackListener {
 				+ "CSC285 Software Development - Augustana College");
 	}
 	
-	@FXML
-	public void handleSaveBtn() throws FileNotFoundException {
-		
-		if(project == null) {
-			JOptionPane.showMessageDialog(null, "Saving is only available after you have created a project by selecting a video!");
-		} else {
-			File file = new File("H:\\newfile.csv");
-			project.saveToFile(file);
-			project.exportToCSV(file);
-			JOptionPane.showMessageDialog(null, "Save Successful!");
-
-		}
-		
-	}
+	
 	
 	@FXML
 	public void handleLoadBtn() throws FileNotFoundException {
