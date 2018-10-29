@@ -389,6 +389,11 @@ public class MainWindowController implements AutoTrackListener {
 
 	}
 	
+	/**
+	 * 
+	 * @param pixels - number of pixels
+	 * @param textBoxFill - height or length
+	 */
 	public void setPixelsperCm(int pixels, String textBoxFill) {
 		TextInputDialog cmEnter = new TextInputDialog();
 		cmEnter.setTitle("Set Box " + textBoxFill);
@@ -481,6 +486,10 @@ public class MainWindowController implements AutoTrackListener {
 				+ "Project Supervisor: Forrest Stonedahl\n" + "CSC285 Software Development - Augustana College");
 	}
 
+	/**
+	 * Loads data from a previous unfinished project
+	 * @throws FileNotFoundException
+	 */
 	@FXML
 	public void handleLoadBtn() throws FileNotFoundException {
 
@@ -491,11 +500,13 @@ public class MainWindowController implements AutoTrackListener {
 		if (chosenFile != null && chosenFile.getName().contains(".txt")) {
 			project = ProjectData.loadFromFile(chosenFile);
 			loadVideo(project.getVideo().getFilePath());
-			System.out.println(project.getTracks().toString());
+			System.out.println(project.getTracks());
 			
 			for(int i = 0; i<project.getTracks().size(); i++) {
 				chickChooser.getItems().add(project.getTracks().get(i).getID());
 				chickChooser.getSelectionModel().select(project.getTracks().get(i).getID());
+				chickChooserAnalysis.getItems().add(project.getTracks().get(i).getID());
+				chickChooserAnalysis.getSelectionModel().select(project.getTracks().get(i).getID());
 				
 			}
 		} else {
