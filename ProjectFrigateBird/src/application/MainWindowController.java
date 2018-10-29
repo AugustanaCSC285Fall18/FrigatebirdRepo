@@ -266,9 +266,7 @@ public class MainWindowController implements AutoTrackListener {
 
 			controller.setProject(project);
 
-			// TODO: controller.getXXX()
-			// TODO: create a new AnimalTrack() with the right name, and stick it in the
-			// projectdata
+			
 			
 			for(int i = 0; i < chickChooser.getItems().size(); i++) {
 				controller.getChickChooser().getItems().add(chickChooser.getItems().get(i));
@@ -308,7 +306,7 @@ public class MainWindowController implements AutoTrackListener {
 
 	}
 
-	@SuppressWarnings("unused")
+
 	@FXML
 	/**
 	 * Depending on what the user is setting, bounds or origin, the mouse click coordinates 
@@ -457,7 +455,9 @@ public class MainWindowController implements AutoTrackListener {
 		File chosenFile = fileChooser.showOpenDialog(stage);
 		if (chosenFile != null) {
 			project = ProjectData.loadFromFile(chosenFile);
-			loadVideo(project.getVideo().getFilePath());
+			System.out.println(project.getVideo().getFilePath());
+			System.out.println(project.getTracks());
+			System.out.println(project.getUnassignedSegments());
 		}
 	}
 
