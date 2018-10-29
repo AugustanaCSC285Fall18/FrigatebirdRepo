@@ -112,6 +112,7 @@ public class MainWindowController implements AutoTrackListener {
 	private boolean isMouseSettingOrigin = false;
 	private boolean isMouseSettingBounds = false;
 	private Point topLeftPointForBounds = null;
+	private Point bottomRightPointForBounds = null;
 
 	@FXML
 	public void initializeWithStage(Stage stage) {
@@ -140,8 +141,8 @@ public class MainWindowController implements AutoTrackListener {
 			project = new ProjectData(filePath);
 			Video video = project.getVideo();
 
-			video.setXPixelsPerCm(6);
-			video.setYPixelsPerCm(6);
+			//video.setXPixelsPerCm(6);
+			//video.setYPixelsPerCm(6);
 
 			vidSlider.setMax(video.getTotalNumFrames() - 1);
 			showFrameAt(0);
@@ -296,15 +297,10 @@ public class MainWindowController implements AutoTrackListener {
 		if (project == null) {
 			JOptionPane.showMessageDialog(null, "Please select a video before setting its bounds!");
 		} else {
-			try {
-				isMouseSettingBounds = true;
-				JOptionPane.showMessageDialog(null,
-						"Please click the upper left corner of the box and then the bottom right corner.");
-				System.out.println(isMouseSettingBounds);
-			} catch (Exception e) {
-				JOptionPane.showMessageDialog(null, "Please load video");
+			isMouseSettingBounds = true;
+			JOptionPane.showMessageDialog(null,
+					"Please click the upper left corner of the box and then the bottom right corner.");	
 
-			}
 		}
 
 	}
@@ -319,12 +315,10 @@ public class MainWindowController implements AutoTrackListener {
 	public void handleCanvasClicked(MouseEvent event) {
 		int x = (int) event.getX();
 		int y = (int) event.getY();
-		System.out.println("x: " + x + " y: " + y);
 
 		if (isMouseSettingBounds) {
+			
 			handleCanvasClickedSettingBounds(x, y);
-
-			isMouseSettingBounds = false;
 
 		} else if (isMouseSettingOrigin) {
 			handleCanvasClickedSettingOrigin(x, y);
@@ -341,25 +335,31 @@ public class MainWindowController implements AutoTrackListener {
 	 * @param y - y coordinate of the Point being made for the bounds
 	 */
 	public void handleCanvasClickedSettingBounds(int x, int y) {
+		int height = 0;
+		int width = 0;
 
-		if (topLeftPointForBounds == null) {
-			topLeftPointForBounds = new Point(x, y);
-		} else {
+			if (topLeftPointForBounds == null) {
+				topLeftPointForBounds = new Point(x, y);
+			} else {
 
-			Point bottomRightPoint = new Point(x, y);
-			System.out.println("top left point: " + topLeftPointForBounds);
-			System.out.println("bottom right point: " + bottomRightPoint);
+				Point bottomRightPoint = new Point(x, y);
+				System.out.println("top left point: " + topLeftPointForBounds);
+				System.out.println("bottom right point: " + bottomRightPoint);
 
-			int width = (int) Math.abs(topLeftPointForBounds.getX() - bottomRightPoint.getX());
-			int height = (int) Math.abs(topLeftPointForBounds.getY() - bottomRightPoint.getY());
+				width = (int) Math.abs(topLeftPointForBounds.getX() - bottomRightPoint.getX());
+				height = (int) Math.abs(topLeftPointForBounds.getY() - bottomRightPoint.getY());
 
-			Rectangle bounds = new Rectangle((int) (topLeftPointForBounds.getX() * getImageScalingRatio()),
-					(int) (topLeftPointForBounds.getY() * getImageScalingRatio()),
-					(int) (width * getImageScalingRatio()), (int) (height * getImageScalingRatio()));
+				Rectangle bounds = new Rectangle((int) (topLeftPointForBounds.getX() * getImageScalingRatio()),
+						(int) (topLeftPointForBounds.getY() * getImageScalingRatio()),
+						(int) (width * getImageScalingRatio()), (int) (height * getImageScalingRatio()));
 
-			project.getVideo().setArenaBounds(bounds);
-		}
-		isMouseSettingBounds = false;
+				project.getVideo().setArenaBounds(bounds);
+
+				System.out.println(bounds);
+				isMouseSettingBounds = false;
+
+			}
+		
 	}
 
 	/**
@@ -386,6 +386,26 @@ public class MainWindowController implements AutoTrackListener {
 			System.out.println(video.getEmptyFrameNum());
 		}
 
+	}
+	
+	public void setPixelsperCm(int pixels, String textBoxFill) {
+		TextInputDialog cmEnter = new TextInputDialog();
+		cmEnter.setTitle("Set Box " + textBoxFill);
+		cmEnter.setHeaderText("Calibration");
+		cmEnter.setContentText("Enter box " + textBoxFill + " in centimeters");
+
+		Optional<String> result = cmEnter.showAndWait();
+		
+		if(result.isPresent()) {
+			int distanceOfBoxInCm = Integer.parseInt(result.get());
+			if(textBoxFill.equals("Height")) {
+				project.getVideo().setYPixelsPerCm(pixels/distanceOfBoxInCm);
+			}else if(textBoxFill.equals("Length")){
+				project.getVideo().setXPixelsPerCm(pixels/distanceOfBoxInCm);
+
+			}
+		}
+		 
 	}
 
 	@FXML
@@ -418,10 +438,9 @@ public class MainWindowController implements AutoTrackListener {
 	 * Deletes a chick
 	 */
 	public void handleDeleteChickBtn() {
-		if (project != null || chickChooser.getItems().isEmpty()) {
+		if (project == null || chickChooser.getItems().isEmpty()) {
 			JOptionPane.showMessageDialog(null, "You haven't added any chicks!");
 		} else {
-			System.out.println(chickChooser.getItems().isEmpty());
 			project.getTracks().remove(chickChooser.getSelectionModel().getSelectedIndex());
 			chickChooser.getItems().remove(chickChooser.getSelectionModel().getSelectedIndex());
 			chickChooserAnalysis.getItems().remove(chickChooserAnalysis.getSelectionModel().getSelectedIndex());

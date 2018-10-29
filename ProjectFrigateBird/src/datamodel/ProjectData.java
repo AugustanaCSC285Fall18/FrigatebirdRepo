@@ -123,8 +123,11 @@ public class ProjectData {
 		for (int a = 0; a < getTracks().size(); a++) {
 			for (int i = 0; i < maxPoints; i++) {
 				if(getTracks().get(a).hasTimePointAtIndex(i)) {
-					//int cmX = (int) video.getTracks().get(a).getTimePointAtIndex(i).getX();
-					CSVbuilder.append(getTracks().get(a).getTimePointAtIndex(i).getFrameNum() + ",");
+					//int cmX = video.
+					int seconds = (int) video.convertFrameNumsToSeconds(getTracks().get(a).getTimePointAtIndex(i).getFrameNum());
+					int cmX;
+					int cmY;
+					CSVbuilder.append(seconds + ",");
 					CSVbuilder.append(getTracks().get(a).getTimePointAtIndex(i).getX() + ",");
 					CSVbuilder.append(getTracks().get(a).getTimePointAtIndex(i).getY() + ",");					
 				}
