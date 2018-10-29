@@ -503,7 +503,9 @@ public class MainWindowController implements AutoTrackListener {
 			System.out.println(project.getVideo().getArenaBounds());
 			System.out.println(project.getVideo().getOriginPoint());
 			
+
 			for(int i = 0; i<project.getTracks().size(); i++) {
+				
 				chickChooser.getItems().add(project.getTracks().get(i).getID());
 				chickChooser.getSelectionModel().select(project.getTracks().get(i).getID());
 				chickChooserAnalysis.getItems().add(project.getTracks().get(i).getID());
