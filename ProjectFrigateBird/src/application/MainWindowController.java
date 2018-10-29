@@ -241,10 +241,7 @@ public class MainWindowController implements AutoTrackListener {
 		project.getUnassignedSegments().clear();
 		project.getUnassignedSegments().addAll(trackedSegments);
 
-		for (AnimalTrack track : trackedSegments) {
-			System.out.println(track);
-//			System.out.println("  " + track.getPositions());
-		}
+		
 		Platform.runLater(() -> {
 			trackingBtn.setText("Autotrack");
 		});
@@ -287,7 +284,7 @@ public class MainWindowController implements AutoTrackListener {
 		} else {
 			try {
 				isMouseSettingOrigin = true;
-				System.out.println("origin button clicked");
+				
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(null, "Please load video");
 			}
@@ -346,8 +343,7 @@ public class MainWindowController implements AutoTrackListener {
 			} else {
 
 				Point bottomRightPoint = new Point(x, y);
-				System.out.println("top left point: " + topLeftPointForBounds);
-				System.out.println("bottom right point: " + bottomRightPoint);
+
 
 				width = (int) Math.abs(topLeftPointForBounds.getX() - bottomRightPoint.getX());
 				height = (int) Math.abs(topLeftPointForBounds.getY() - bottomRightPoint.getY());
@@ -358,7 +354,7 @@ public class MainWindowController implements AutoTrackListener {
 
 				project.getVideo().setArenaBounds(bounds);
 
-				System.out.println(bounds);
+				
 				isMouseSettingBounds = false;
 
 			}
@@ -386,7 +382,7 @@ public class MainWindowController implements AutoTrackListener {
 		} else {
 			Video video = project.getVideo();
 			video.setEmptyFrameNum(video.getCurrentFrameNum());
-			System.out.println(video.getEmptyFrameNum());
+			
 		}
 
 	}
@@ -492,7 +488,8 @@ public class MainWindowController implements AutoTrackListener {
 		if (chosenFile != null && chosenFile.getName().contains(".txt")) {
 			project = ProjectData.loadFromFile(chosenFile);
 			loadVideo(project.getVideo().getFilePath());
-			System.out.println(project.getVideo().getArenaBounds());
+
+
 		} else {
 			JOptionPane.showMessageDialog(null, "Please select the .txt file that you saved to.");
 

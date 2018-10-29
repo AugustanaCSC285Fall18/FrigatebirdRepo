@@ -106,8 +106,7 @@ public class ManualTrackWindowController {
 					selectedTrack.setTimePointAtTime(unscaledX, unscaledY, curFrameNum);
 				}
 				AnimalTrack closestSegment = project.getNearestUnassignedSegmentWithinDist(x, y, curFrameNum, curFrameNum+50, 25);
-				//System.out.println("Unassigned: " + project.getUnassignedSegments());
-				//System.out.println("Closest: " + closestSegment);
+				
 				if(closestSegment != null) {
 					selectedTrack.addSegment(closestSegment);
 					project.getUnassignedSegments().remove(closestSegment);
@@ -126,7 +125,7 @@ public class ManualTrackWindowController {
 
 			
 
-			//System.out.println(project.getTracks().toString());
+			
 
 		}
 

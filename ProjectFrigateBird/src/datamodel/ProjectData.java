@@ -95,23 +95,16 @@ public class ProjectData {
 
 		StringBuilder CSVbuilder = new StringBuilder();
 		FileWriter CSVfile = null;
+		
+		int XPixelsPerCm = (int) video.getXPixelsPerCm();
+		int YPixelsPerCm = (int) video.getYPixelsPerCm();
+		
+		double distanceInPixels = 0;
 		try {
 			CSVfile = new FileWriter(saveFile);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		}
-
-		for (int i = 0; i < getTracks().size(); i++) {
-			CSVbuilder.append("Chick: " + getTracks().get(i).getID());
-			CSVbuilder.append(",,,,");
-		}
-
-		CSVbuilder.append("\n");
-
-		
-		for (int i = 0; i < getTracks().size(); i++) {
-			CSVbuilder.append("Time (In Seconds),X-Coordinate (In Cm),Y-Coordinate (In Cm),,");
 		}
 
 		CSVbuilder.append("\n");
@@ -122,21 +115,28 @@ public class ProjectData {
 			}
 		}
 		for (int a = 0; a < getTracks().size(); a++) {
-			for (int i = 0; i < maxPoints; i++) {
+			CSVbuilder.append("Chick: " + getTracks().get(a).getID());
+			CSVbuilder.append(",,,,");
+			CSVbuilder.append("\n");
+			CSVbuilder.append("Time (In Seconds),X-Coordinate (In Cm),Y-Coordinate (In Cm),,");
+			CSVbuilder.append("\n");
+			for (int i = 1; i < maxPoints; i++) {
 				if(getTracks().get(a).hasTimePointAtIndex(i)) {
-					//int cmX = video.
+					
+					
+					 distanceInPixels += getTracks().get(a).getTimePointAtIndex(i).getDistanceTo(getTracks().get(a).getTimePointAtIndex(i-1));
 					int seconds = (int) video.convertFrameNumsToSeconds(getTracks().get(a).getTimePointAtIndex(i).getFrameNum());
-					int XPixelsPerCm = (int) video.getXPixelsPerCm();
-					int YPixelsPerCm = (int) video.getYPixelsPerCm();
+					
 					CSVbuilder.append(seconds + ",");
-					CSVbuilder.append((getTracks().get(a).getTimePointAtIndex(i).getX()/XPixelsPerCm) + ",");
-					CSVbuilder.append((getTracks().get(a).getTimePointAtIndex(i).getY()/YPixelsPerCm) + ",");					
+					CSVbuilder.append(Math.round((getTracks().get(a).getTimePointAtIndex(i).getX()/XPixelsPerCm)) + ",");
+					CSVbuilder.append(Math.round((getTracks().get(a).getTimePointAtIndex(i).getY()/YPixelsPerCm)) + ",");					
 				}
 				CSVbuilder.append("\n");
 			}
+			CSVbuilder.append("Distance Traveled," + Math.round((distanceInPixels/video.getAvgPixelsPerCm())));
 			
 		}
-		//System.out.println(CSVbuilder);
+		
 		try {
 			CSVfile.append(CSVbuilder);
 			CSVfile.close();
