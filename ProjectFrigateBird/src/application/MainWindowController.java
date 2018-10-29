@@ -143,8 +143,8 @@ public class MainWindowController implements AutoTrackListener {
 			project = new ProjectData(filePath);
 			Video video = project.getVideo();
 
-			video.setXPixelsPerCm(6);
-			video.setYPixelsPerCm(6);
+//			video.setXPixelsPerCm(6);
+//			video.setYPixelsPerCm(6);
 
 			vidSlider.setMax(video.getTotalNumFrames() - 1);
 			showFrameAt(0);
