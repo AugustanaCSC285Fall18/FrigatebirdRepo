@@ -30,6 +30,11 @@
                         <Insets left="10.0" />
                      </FlowPane.margin>
                   </TextField>
+                  <Button fx:id="exportBtn" mnemonicParsing="false" onAction="#handleExportBtn" text="Export to CSV">
+                     <FlowPane.margin>
+                        <Insets left="10.0" />
+                     </FlowPane.margin>
+                  </Button>
                </children>
             </FlowPane>
          </bottom>

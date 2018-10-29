@@ -474,8 +474,9 @@ public class MainWindowController implements AutoTrackListener {
 		if(project == null) {
 			JOptionPane.showMessageDialog(null, "Saving is only available after you have created a project by selecting a video!");
 		} else {
-			File file = new File("H:\\newfile.txt");
+			File file = new File("H:\\newfile.csv");
 			project.saveToFile(file);
+			project.exportToCSV(file);
 			JOptionPane.showMessageDialog(null, "Save Successful!");
 
 		}
