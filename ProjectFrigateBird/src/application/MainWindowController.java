@@ -141,16 +141,18 @@ public class MainWindowController implements AutoTrackListener {
 	public void loadVideo(String filePath) {
 		try {
 			project = new ProjectData(filePath);
-			Video video = project.getVideo();
 
 //			video.setXPixelsPerCm(6);
 //			video.setYPixelsPerCm(6);
-
-			vidSlider.setMax(video.getTotalNumFrames() - 1);
-			showFrameAt(0);
+			setUpUIForNewVideo();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void setUpUIForNewVideo() {
+		vidSlider.setMax(project.getVideo().getTotalNumFrames() - 1);
+		showFrameAt(0);		
 	}
 
 	/**
@@ -497,8 +499,9 @@ public class MainWindowController implements AutoTrackListener {
 
 		if (chosenFile != null && chosenFile.getName().contains(".txt")) {
 			project = ProjectData.loadFromFile(chosenFile);
-			loadVideo(project.getVideo().getFilePath());
+			setUpUIForNewVideo();
 
+			System.out.println("track size: " + project.getTracks().size());
 			System.out.println(project.getTracks().toString());
 			System.out.println(project.getVideo().getArenaBounds());
 			System.out.println(project.getVideo().getOriginPoint());

@@ -61,6 +61,10 @@ public class ProjectData {
 		Gson gson = new Gson();
 		ProjectData data = gson.fromJson(jsonText, ProjectData.class);
 		data.getVideo().connectVideoCapture();
+		
+		System.out.println("loading tracks size: " + data.getTracks().size());
+		System.out.println("after loading: " + data.getTracks());
+		
 		return data;
 	}
 
@@ -133,7 +137,7 @@ public class ProjectData {
 				}
 				CSVbuilder.append("\n");
 			}
-			CSVbuilder.append("Distance Traveled," + Math.round((distanceInPixels/video.getAvgPixelsPerCm())));
+			CSVbuilder.append("Distance Traveled," + Math.round((distanceInPixels/video.getAvgPixelsPerCm())) + "\n");
 			
 		}
 		
