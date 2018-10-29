@@ -34,6 +34,8 @@ public class ManualTrackWindowController {
 	@FXML
 	private Button backXFramesBtn;
 	@FXML
+	private Button exportBtn;
+	@FXML
 	private TextField frameJumpTextField;
 	@FXML
 	private Canvas overlayCanvas;
@@ -95,9 +97,9 @@ public class ManualTrackWindowController {
 				} else {
 					selectedTrack.setTimePointAtTime(unscaledX, unscaledY, curFrameNum);
 				}
-				AnimalTrack closestSegment = project.getNearestUnassignedSegmentWithinDist(x, y, curFrameNum, curFrameNum+50, 15);
-				System.out.println("Unassigned: " + project.getUnassignedSegments());
-				System.out.println("Closest: " + closestSegment);
+				AnimalTrack closestSegment = project.getNearestUnassignedSegmentWithinDist(x, y, curFrameNum, curFrameNum+50, 25);
+				//System.out.println("Unassigned: " + project.getUnassignedSegments());
+				//System.out.println("Closest: " + closestSegment);
 				if(closestSegment != null) {
 					selectedTrack.addSegment(closestSegment);
 					project.getUnassignedSegments().remove(closestSegment);
@@ -114,8 +116,9 @@ public class ManualTrackWindowController {
 
 			autoJumpForward();
 
+			
 
-			System.out.println(project.getTracks().toString());
+			//System.out.println(project.getTracks().toString());
 
 		}
 
@@ -266,5 +269,10 @@ public class ManualTrackWindowController {
 				g.fillRect(currPt.getX() * scalingRatio - 5, currPt.getY() * scalingRatio - 5, 11, 11);
 			}
 		}
+	}
+	
+	@FXML
+	private void handleExportBtn() {
+		project.exportToCSV(project.getSaveFile());
 	}
 }

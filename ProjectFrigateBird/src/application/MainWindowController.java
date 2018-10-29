@@ -283,26 +283,33 @@ public class MainWindowController implements AutoTrackListener {
 
 	@FXML
 	public void handleSetOrigin() {
-		try {
-			isMouseSettingOrigin = true;
-			System.out.println("origin button clicked");
-		}catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Please load video");
+		if (project == null) {
+			JOptionPane.showMessageDialog(null, "Please select a video before setting its origin!");
+		} else {
+			try {
+				isMouseSettingOrigin = true;
+				System.out.println("origin button clicked");
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, "Please load video");
+			}
 		}
 	}
 
 	@FXML
 	public void handleSetBounds() {
-		try {
-			isMouseSettingBounds = true;
-			JOptionPane.showMessageDialog(null,
-					"Please click the upper left corner of the box and then the bottom right corner.");
-			System.out.println(isMouseSettingBounds);
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Please load video");
+		if (project == null) {
+			JOptionPane.showMessageDialog(null, "Please select a video before setting its bounds!");
+		} else {
+			try {
+				isMouseSettingBounds = true;
+				JOptionPane.showMessageDialog(null,
+						"Please click the upper left corner of the box and then the bottom right corner.");
+				System.out.println(isMouseSettingBounds);
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, "Please load video");
 
-		}		
-		
+			}
+		}
 
 	}
 
@@ -338,6 +345,7 @@ public class MainWindowController implements AutoTrackListener {
 	 * @param y - y coordinate of the Point being made for the bounds
 	 */
 	public void handleCanvasClickedSettingBounds(int x, int y) {
+		
 		if (topLeftPointForBounds == null) {
 			topLeftPointForBounds = new Point(x, y);
 		} else {
@@ -354,6 +362,7 @@ public class MainWindowController implements AutoTrackListener {
 
 			project.getVideo().setArenaBounds(bounds);
 		}
+	
 
 	}
 
@@ -363,17 +372,24 @@ public class MainWindowController implements AutoTrackListener {
 	 * @param y - y coordinate of the Point being made for the bounds
 	 */
 	public void handleCanvasClickedSettingOrigin(int x, int y) {
-		int scaledX = (int) (x/getImageScalingRatio());
-		int scaledY = (int) (y/getImageScalingRatio());
+
+		int scaledX = (int) (x / getImageScalingRatio());
+		int scaledY = (int) (y / getImageScalingRatio());
 		Point point = new Point(scaledX, scaledY);
 		project.getVideo().setOriginPoint(point);
+
 	}
 
 	@FXML
 	public void handleSetBlankFrameBtn() {
-		Video video = project.getVideo();
-		video.setEmptyFrameNum(video.getCurrentFrameNum());
-		System.out.println(video.getEmptyFrameNum());
+		if(project == null) {
+			JOptionPane.showMessageDialog(null, "Please select a video before setting the blank frame!");
+		}else {
+			Video video = project.getVideo();
+			video.setEmptyFrameNum(video.getCurrentFrameNum());
+			System.out.println(video.getEmptyFrameNum());
+		}
+		
 	}
 	
 	@FXML
@@ -381,30 +397,39 @@ public class MainWindowController implements AutoTrackListener {
 	 * Adds a chick (AnimalTrack object) with a name
 	 */
 	public void handleAddChickBtn() {
-		TextInputDialog nameEnter = new TextInputDialog();
-		nameEnter.setTitle("Add Chicks");
-		nameEnter.setHeaderText("Chick Creation Menu");
-		nameEnter.setContentText("Enter Chick's Name");
-		
-		Optional<String> result = nameEnter.showAndWait();
-		if (result.isPresent()){
-			String chickName = result.get(); 
-			AnimalTrack chickToAdd = new AnimalTrack(chickName);
-			project.getTracks().add(chickToAdd);
-			chickChooser.getItems().add(chickName);
-			chickChooser.getSelectionModel().select(chickName);
-			chickChooserAnalysis.getItems().add(chickName);
-			chickChooserAnalysis.getSelectionModel().select(chickName);
-		}		
+		if(project != null) {
+			TextInputDialog nameEnter = new TextInputDialog();
+			nameEnter.setTitle("Add Chicks");
+			nameEnter.setHeaderText("Chick Creation Menu");
+			nameEnter.setContentText("Enter Chick's Name");
+			
+			Optional<String> result = nameEnter.showAndWait();
+			if (result.isPresent()){
+				String chickName = result.get(); 
+				AnimalTrack chickToAdd = new AnimalTrack(chickName);
+				project.getTracks().add(chickToAdd);
+				chickChooser.getItems().add(chickName);
+				chickChooser.getSelectionModel().select(chickName);
+				chickChooserAnalysis.getItems().add(chickName);
+				chickChooserAnalysis.getSelectionModel().select(chickName);
+			}		
+		} else {
+			JOptionPane.showMessageDialog(null, "Pleas create a project by selecting a video before adding chicks!");
+		}
 	}
 	
 	/**
 	 * Deletes a chick
 	 */
 	public void handleDeleteChickBtn() {
-		project.getTracks().remove(chickChooser.getSelectionModel().getSelectedIndex());
-		chickChooser.getItems().remove(chickChooser.getSelectionModel().getSelectedIndex());
-		chickChooserAnalysis.getItems().remove(chickChooserAnalysis.getSelectionModel().getSelectedIndex());
+		if(project != null || chickChooser.getItems().isEmpty()) {
+			JOptionPane.showMessageDialog(null, "You haven't added any chicks!");
+		}else {
+			System.out.println(chickChooser.getItems().isEmpty());
+			project.getTracks().remove(chickChooser.getSelectionModel().getSelectedIndex());
+			chickChooser.getItems().remove(chickChooser.getSelectionModel().getSelectedIndex());
+			chickChooserAnalysis.getItems().remove(chickChooserAnalysis.getSelectionModel().getSelectedIndex());
+		}
 	}
 	
 	/**
@@ -443,8 +468,17 @@ public class MainWindowController implements AutoTrackListener {
 	
 	@FXML
 	public void handleSaveBtn() throws FileNotFoundException {
-		File file = new File("H:\\newfile.txt");
-		project.saveToFile(file);
+		
+		if(project == null) {
+			JOptionPane.showMessageDialog(null, "Saving is only available after you have created a project by selecting a video!");
+		} else {
+			File file = new File("H:\\newfile.csv");
+			project.saveToFile(file);
+			project.exportToCSV(file);
+			JOptionPane.showMessageDialog(null, "Save Successful!");
+
+		}
+		
 	}
 	
 	@FXML
@@ -453,11 +487,12 @@ public class MainWindowController implements AutoTrackListener {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open File");
 		File chosenFile = fileChooser.showOpenDialog(stage);
-		if (chosenFile != null) {
-			project = ProjectData.loadFromFile(chosenFile);
-			System.out.println(project.getVideo().getFilePath());
-			System.out.println(project.getTracks());
-			System.out.println(project.getUnassignedSegments());
+		
+		if (chosenFile != null && chosenFile.getName().contains(".txt")) {
+			project.loadFromFile(chosenFile);
+		} else {
+			JOptionPane.showMessageDialog(null, "Please select the .txt file that you saved to.");
+
 		}
 	}
 
