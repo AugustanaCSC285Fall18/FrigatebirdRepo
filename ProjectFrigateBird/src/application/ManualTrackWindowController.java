@@ -6,6 +6,7 @@ import datamodel.Video;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Optional;
 
 import javax.swing.JOptionPane;
 
@@ -19,6 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -284,12 +286,22 @@ public class ManualTrackWindowController {
 		if(project == null) {
 			JOptionPane.showMessageDialog(null, "Saving is only available after you have created a project by selecting a video!");
 		} else {
-			File file = new File("H:\\newfile.txt");
-			File CSVfile = new File("H:\\newfile.csv");
-			this.project.saveToFile(file);
-			this.project.saveToFile(CSVfile);
-			this.project.exportToCSV(CSVfile);
-			JOptionPane.showMessageDialog(null, "Save Successful!");
+		
+			TextInputDialog nameEnter = new TextInputDialog();
+			nameEnter.setTitle("Save File");
+			nameEnter.setHeaderText("Saving menu");
+			nameEnter.setContentText("Enter Save File Name:");
+
+			Optional<String> result = nameEnter.showAndWait();
+			if (result.isPresent()) {
+				File file = new File("H:\\" +result + ".txt");
+				File CSVfile = new File("H:\\" +result + ".csv");
+				this.project.saveToFile(file);
+				this.project.saveToFile(CSVfile);
+				this.project.exportToCSV(CSVfile);
+				JOptionPane.showMessageDialog(null, "Save Successful!");
+			}
+			
 
 		}
 		

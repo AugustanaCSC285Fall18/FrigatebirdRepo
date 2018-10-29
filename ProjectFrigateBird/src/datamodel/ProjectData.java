@@ -62,8 +62,7 @@ public class ProjectData {
 		ProjectData data = gson.fromJson(jsonText, ProjectData.class);
 		data.getVideo().connectVideoCapture();
 		
-		System.out.println("loading tracks size: " + data.getTracks().size());
-		System.out.println("after loading: " + data.getTracks());
+	
 		
 		return data;
 	}

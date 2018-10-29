@@ -500,13 +500,7 @@ public class MainWindowController implements AutoTrackListener {
 		if (chosenFile != null && chosenFile.getName().contains(".txt")) {
 			project = ProjectData.loadFromFile(chosenFile);
 			setUpUIForNewVideo();
-
-			System.out.println("track size: " + project.getTracks().size());
-			System.out.println(project.getTracks().toString());
-			System.out.println(project.getVideo().getArenaBounds());
-			System.out.println(project.getVideo().getOriginPoint());
 			
-
 			for(int i = 0; i<project.getTracks().size(); i++) {
 				
 				chickChooser.getItems().add(project.getTracks().get(i).getID());
