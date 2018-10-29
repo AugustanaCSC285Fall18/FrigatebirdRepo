@@ -329,6 +329,7 @@ public class MainWindowController implements AutoTrackListener {
 
 	}
 
+	
 	/**
 	 * 
 	 * @param x - x coordinate of the Point being made for the bounds

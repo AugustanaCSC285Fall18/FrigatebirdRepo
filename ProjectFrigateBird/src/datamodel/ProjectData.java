@@ -109,6 +109,7 @@ public class ProjectData {
 
 		CSVbuilder.append("\n");
 
+		
 		for (int i = 0; i < getTracks().size(); i++) {
 			CSVbuilder.append("Time,X-Coordinate (In Cm),Y-Coordinate (In Cm),,");
 		}
