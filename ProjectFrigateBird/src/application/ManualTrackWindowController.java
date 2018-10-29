@@ -288,6 +288,7 @@ public class ManualTrackWindowController {
 			File file = new File("H:\\newfile.txt");
 			File CSVfile = new File("H:\\newfile.csv");
 			project.saveToFile(file);
+			project.saveToFile(CSVfile);
 			project.exportToCSV(CSVfile);
 			JOptionPane.showMessageDialog(null, "Save Successful!");
 

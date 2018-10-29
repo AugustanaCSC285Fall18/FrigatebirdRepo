@@ -118,8 +118,7 @@ public class MainWindowController implements AutoTrackListener {
 
 		vidSlider.valueProperty().addListener((obs, oldV, newV) -> showFrameAt(newV.intValue()));
 	}
-	
-	
+
 	@FXML
 	public void handleBrowse() {
 		FileChooser fileChooser = new FileChooser();
@@ -173,7 +172,7 @@ public class MainWindowController implements AutoTrackListener {
 			int seconds = (int) (timeInSeconds % 60);
 
 			Platform.runLater(() -> {
-				GraphicsContext g  = videoCanvas.getGraphicsContext2D();
+				GraphicsContext g = videoCanvas.getGraphicsContext2D();
 				double width = project.getVideo().getFrameWidth();
 				double height = project.getVideo().getFrameHeight();
 				double scalingRatio = getImageScalingRatio();
@@ -192,32 +191,32 @@ public class MainWindowController implements AutoTrackListener {
 	public void handleStartAutotracking() throws InterruptedException {
 		try {
 			if (autotracker == null || !autotracker.isRunning()) {
-			Video video = project.getVideo();
-			video.setStartFrameNum(Integer.parseInt(startFrameLabel.getText()));
-			video.setEndFrameNum(Integer.parseInt(endFrameLabel.getText()));
-			autotracker = new AutoTracker();
-			// Use Observer Pattern to give autotracker a reference to this object,
-			// and call back to methods in this class to update progress.
-			autotracker.addAutoTrackListener(this);
+				Video video = project.getVideo();
+				video.setStartFrameNum(Integer.parseInt(startFrameLabel.getText()));
+				video.setEndFrameNum(Integer.parseInt(endFrameLabel.getText()));
+				autotracker = new AutoTracker();
+				// Use Observer Pattern to give autotracker a reference to this object,
+				// and call back to methods in this class to update progress.
+				autotracker.addAutoTrackListener(this);
 
-			// this method will start a new thread to run AutoTracker in the background
-			// so that we don't freeze up the main JavaFX UI thread.
-			autotracker.startAnalysis(video);
-			trackingBtn.setText("CANCEL auto-tracking");
+				// this method will start a new thread to run AutoTracker in the background
+				// so that we don't freeze up the main JavaFX UI thread.
+				autotracker.startAnalysis(video);
+				trackingBtn.setText("CANCEL auto-tracking");
 			} else {
 				autotracker.cancelAnalysis();
 				trackingBtn.setText("Start auto-tracking");
 			}
-		}catch (Exception e){
+		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Please load video");
 		}
-		
 
 	}
 
 	@Override
 	/**
-	 * this method will get called repeatedly by the Autotracker after it analyzes each frame
+	 * this method will get called repeatedly by the Autotracker after it analyzes
+	 * each frame
 	 * 
 	 */
 	public void handleTrackedFrame(Mat frame, int frameNumber, double fractionComplete) {
@@ -225,10 +224,10 @@ public class MainWindowController implements AutoTrackListener {
 		// this method is being run by the AutoTracker's thread, so we must
 		// ask the JavaFX UI thread to update some visual properties
 		Platform.runLater(() -> {
-				GraphicsContext g = videoCanvas.getGraphicsContext2D();
-				g.clearRect(0, 0, videoCanvas.getWidth(), videoCanvas.getHeight());
-				double scalingRatio = getImageScalingRatio();
-				g.drawImage(imgFrame, 0, 0, imgFrame.getWidth() * scalingRatio, imgFrame.getHeight() * scalingRatio);
+			GraphicsContext g = videoCanvas.getGraphicsContext2D();
+			g.clearRect(0, 0, videoCanvas.getWidth(), videoCanvas.getHeight());
+			double scalingRatio = getImageScalingRatio();
+			g.drawImage(imgFrame, 0, 0, imgFrame.getWidth() * scalingRatio, imgFrame.getHeight() * scalingRatio);
 
 			vidSlider.setValue(frameNumber);
 		});
@@ -265,9 +264,7 @@ public class MainWindowController implements AutoTrackListener {
 
 			controller.setProject(project);
 
-			
-			
-			for(int i = 0; i < chickChooser.getItems().size(); i++) {
+			for (int i = 0; i < chickChooser.getItems().size(); i++) {
 				controller.getChickChooser().getItems().add(chickChooser.getItems().get(i));
 				controller.getChickChooser().getSelectionModel().select(0);
 			}
@@ -312,17 +309,17 @@ public class MainWindowController implements AutoTrackListener {
 
 	}
 
-
 	@FXML
 	/**
-	 * Depending on what the user is setting, bounds or origin, the mouse click coordinates 
-	 * are sent to the respective handle method
+	 * Depending on what the user is setting, bounds or origin, the mouse click
+	 * coordinates are sent to the respective handle method
+	 * 
 	 * @param event - mouse click
 	 */
 	public void handleCanvasClicked(MouseEvent event) {
 		int x = (int) event.getX();
 		int y = (int) event.getY();
-		System.out.println("x: " + x + " y: "+ y);
+		System.out.println("x: " + x + " y: " + y);
 
 		if (isMouseSettingBounds) {
 			handleCanvasClickedSettingBounds(x, y);
@@ -335,7 +332,7 @@ public class MainWindowController implements AutoTrackListener {
 			isMouseSettingOrigin = false;
 
 		}
-		
+
 	}
 
 	/**
@@ -344,7 +341,7 @@ public class MainWindowController implements AutoTrackListener {
 	 * @param y - y coordinate of the Point being made for the bounds
 	 */
 	public void handleCanvasClickedSettingBounds(int x, int y) {
-		
+
 		if (topLeftPointForBounds == null) {
 			topLeftPointForBounds = new Point(x, y);
 		} else {
@@ -356,13 +353,13 @@ public class MainWindowController implements AutoTrackListener {
 			int width = (int) Math.abs(topLeftPointForBounds.getX() - bottomRightPoint.getX());
 			int height = (int) Math.abs(topLeftPointForBounds.getY() - bottomRightPoint.getY());
 
-			Rectangle bounds = new Rectangle((int) (topLeftPointForBounds.getX()*getImageScalingRatio()), (int) (topLeftPointForBounds.getY()*getImageScalingRatio()),
-					(int) (width*getImageScalingRatio()), (int) (height*getImageScalingRatio()));
+			Rectangle bounds = new Rectangle((int) (topLeftPointForBounds.getX() * getImageScalingRatio()),
+					(int) (topLeftPointForBounds.getY() * getImageScalingRatio()),
+					(int) (width * getImageScalingRatio()), (int) (height * getImageScalingRatio()));
 
 			project.getVideo().setArenaBounds(bounds);
 		}
-	
-
+		isMouseSettingBounds = false;
 	}
 
 	/**
@@ -381,56 +378,56 @@ public class MainWindowController implements AutoTrackListener {
 
 	@FXML
 	public void handleSetBlankFrameBtn() {
-		if(project == null) {
+		if (project == null) {
 			JOptionPane.showMessageDialog(null, "Please select a video before setting the blank frame!");
-		}else {
+		} else {
 			Video video = project.getVideo();
 			video.setEmptyFrameNum(video.getCurrentFrameNum());
 			System.out.println(video.getEmptyFrameNum());
 		}
-		
+
 	}
-	
+
 	@FXML
 	/**
 	 * Adds a chick (AnimalTrack object) with a name
 	 */
 	public void handleAddChickBtn() {
-		if(project != null) {
+		if (project != null) {
 			TextInputDialog nameEnter = new TextInputDialog();
 			nameEnter.setTitle("Add Chicks");
 			nameEnter.setHeaderText("Chick Creation Menu");
 			nameEnter.setContentText("Enter Chick's Name");
-			
+
 			Optional<String> result = nameEnter.showAndWait();
-			if (result.isPresent()){
-				String chickName = result.get(); 
+			if (result.isPresent()) {
+				String chickName = result.get();
 				AnimalTrack chickToAdd = new AnimalTrack(chickName);
 				project.getTracks().add(chickToAdd);
 				chickChooser.getItems().add(chickName);
 				chickChooser.getSelectionModel().select(chickName);
 				chickChooserAnalysis.getItems().add(chickName);
 				chickChooserAnalysis.getSelectionModel().select(chickName);
-			}		
+			}
 		} else {
 			JOptionPane.showMessageDialog(null, "Pleas create a project by selecting a video before adding chicks!");
 		}
 	}
-	
+
 	/**
 	 * Deletes a chick
 	 */
 	public void handleDeleteChickBtn() {
-		if(project != null || chickChooser.getItems().isEmpty()) {
+		if (project != null || chickChooser.getItems().isEmpty()) {
 			JOptionPane.showMessageDialog(null, "You haven't added any chicks!");
-		}else {
+		} else {
 			System.out.println(chickChooser.getItems().isEmpty());
 			project.getTracks().remove(chickChooser.getSelectionModel().getSelectedIndex());
 			chickChooser.getItems().remove(chickChooser.getSelectionModel().getSelectedIndex());
 			chickChooserAnalysis.getItems().remove(chickChooserAnalysis.getSelectionModel().getSelectedIndex());
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @return - image scaling ratio
@@ -440,11 +437,10 @@ public class MainWindowController implements AutoTrackListener {
 		double heightRatio = overlayCanvas.getHeight() / project.getVideo().getFrameHeight();
 		return Math.min(widthRatio, heightRatio);
 	}
-	
+
 	@FXML
 	public void handleInstructionsBtn() {
-		JOptionPane.showMessageDialog(null,
-				"1. Please select a video from the Select Video button to the left.\n"
+		JOptionPane.showMessageDialog(null, "1. Please select a video from the Select Video button to the left.\n"
 				+ "2. Please select the callibration tab in the drop down tabs to the right and complete each of the Callibration tools."
 				+ "\n\t-Select a blank frame to help with the auto-tracking process by clicking the button when the screen is showing a frame with no chicks."
 				+ "\n\t-Select an origin point point on the screen by clicking the button then selecting a point on the screen to measure distance from."
@@ -456,26 +452,25 @@ public class MainWindowController implements AutoTrackListener {
 				+ "\n5. Select proceed to manual tracking.\n\t-Begin adding points to each of the chicks until an autoTrack segment is assigned to the chick."
 				+ "\n5. Select the analyze button to save your progress and to get some info about the data in the project.");
 	}
-	
+
 	@FXML
 	public void handleAboutBtn() {
-		JOptionPane.showMessageDialog(null,
-				"Creators: Chase Fahy, Jason Palmer & Connor McGing\n"
-				+ "Project Supervisor: Forrest Stonedahl\n"
-				+ "CSC285 Software Development - Augustana College");
+		JOptionPane.showMessageDialog(null, "Creators: Chase Fahy, Jason Palmer & Connor McGing\n"
+				+ "Project Supervisor: Forrest Stonedahl\n" + "CSC285 Software Development - Augustana College");
 	}
-	
-	
-	
+
+
 	@FXML
 	public void handleLoadBtn() throws FileNotFoundException {
-		
+
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open File");
 		File chosenFile = fileChooser.showOpenDialog(stage);
-		
+
 		if (chosenFile != null && chosenFile.getName().contains(".txt")) {
-			project.loadFromFile(chosenFile);
+			project = ProjectData.loadFromFile(chosenFile);
+			loadVideo(project.getVideo().getFilePath());
+			System.out.println(project.getVideo().getArenaBounds());
 		} else {
 			JOptionPane.showMessageDialog(null, "Please select the .txt file that you saved to.");
 
