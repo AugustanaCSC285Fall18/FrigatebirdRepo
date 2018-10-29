@@ -410,15 +410,16 @@ public class MainWindowController implements AutoTrackListener {
 				chickChooserAnalysis.getSelectionModel().select(chickName);
 			}
 		} else {
-			JOptionPane.showMessageDialog(null, "Pleas create a project by selecting a video before adding chicks!");
+			JOptionPane.showMessageDialog(null, "Please create a project by selecting a video before adding chicks!");
 		}
+		
 	}
 
 	/**
 	 * Deletes a chick
 	 */
 	public void handleDeleteChickBtn() {
-		if (project != null || chickChooser.getItems().isEmpty()) {
+		if (project == null || chickChooser.getItems().isEmpty()) {
 			JOptionPane.showMessageDialog(null, "You haven't added any chicks!");
 		} else {
 			System.out.println(chickChooser.getItems().isEmpty());
@@ -426,6 +427,7 @@ public class MainWindowController implements AutoTrackListener {
 			chickChooser.getItems().remove(chickChooser.getSelectionModel().getSelectedIndex());
 			chickChooserAnalysis.getItems().remove(chickChooserAnalysis.getSelectionModel().getSelectedIndex());
 		}
+		
 	}
 
 	/**
@@ -459,7 +461,6 @@ public class MainWindowController implements AutoTrackListener {
 				+ "Project Supervisor: Forrest Stonedahl\n" + "CSC285 Software Development - Augustana College");
 	}
 
-
 	@FXML
 	public void handleLoadBtn() throws FileNotFoundException {
 
@@ -470,7 +471,13 @@ public class MainWindowController implements AutoTrackListener {
 		if (chosenFile != null && chosenFile.getName().contains(".txt")) {
 			project = ProjectData.loadFromFile(chosenFile);
 			loadVideo(project.getVideo().getFilePath());
-			System.out.println(project.getVideo().getArenaBounds());
+			System.out.println(project.getTracks().toString());
+			
+			for(int i = 0; i<project.getTracks().size(); i++) {
+				chickChooser.getItems().add(project.getTracks().get(i).getID());
+				chickChooser.getSelectionModel().select(project.getTracks().get(i).getID());
+				
+			}
 		} else {
 			JOptionPane.showMessageDialog(null, "Please select the .txt file that you saved to.");
 
