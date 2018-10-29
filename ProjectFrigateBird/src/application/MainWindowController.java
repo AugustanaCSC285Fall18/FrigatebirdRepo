@@ -135,7 +135,7 @@ public class MainWindowController implements AutoTrackListener {
 	@FXML
 	/**
 	 * 
-	 * @param filePath - location where the video is located
+	 * @param filePath - where the video is located
 	 */
 	public void loadVideo(String filePath) {
 		try {
@@ -453,10 +453,11 @@ public class MainWindowController implements AutoTrackListener {
 	public void handleLoadBtn() throws FileNotFoundException {
 		
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Open Video File");
+		fileChooser.setTitle("Open File");
 		File chosenFile = fileChooser.showOpenDialog(stage);
 		if (chosenFile != null) {
-			project.loadFromFile(chosenFile);
+			project = ProjectData.loadFromFile(chosenFile);
+			loadVideo(project.getVideo().getFilePath());
 		}
 	}
 
